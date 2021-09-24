@@ -6,18 +6,21 @@
 	>
 		<slot name="rooms-header" />
 
-		<rooms-search
-			:rooms="rooms"
-			:loading-rooms="loadingRooms"
-			:text-messages="textMessages"
-			:show-add-room="showAddRoom"
-			@search-room="searchRoom"
-			@add-room="$emit('add-room')"
-		>
-			<template v-for="(i, name) in $scopedSlots" #[name]="data">
-				<slot :name="name" v-bind="data" />
-			</template>
-		</rooms-search>
+		<slot name="rooms-list-search">
+			<rooms-search
+				:rooms="rooms"
+				:loading-rooms="loadingRooms"
+				:text-messages="textMessages"
+				:show-search="showSearch"
+				:show-add-room="showAddRoom"
+				@search-room="searchRoom"
+				@add-room="$emit('add-room')"
+			>
+				<template v-for="(i, name) in $scopedSlots" #[name]="data">
+					<slot :name="name" v-bind="data" />
+				</template>
+			</rooms-search>
+		</slot>
 
 		<loader :show="loadingRooms" />
 
@@ -27,7 +30,7 @@
 			</slot>
 		</div>
 
-		<div v-if="!loadingRooms" class="vac-room-list">
+		<div v-if="!loadingRooms" id="rooms-list" class="vac-room-list">
 			<div
 				v-for="fRoom in filteredRooms"
 				:id="fRoom.roomId"
@@ -51,34 +54,22 @@
 				</room-content>
 			</div>
 			<transition name="vac-fade-message">
-				<infinite-loading
-					v-if="rooms.length && !loadingRooms"
-					force-use-infinite-wrapper=".vac-room-list"
-					web-component-name="vue-advanced-chat"
-					spinner="spiral"
-					@infinite="loadMoreRooms"
-				>
-					<div slot="spinner">
-						<loader :show="true" :infinite="true" />
-					</div>
-					<div slot="no-results" />
-					<div slot="no-more" />
-				</infinite-loading>
+				<div v-if="rooms.length && !loadingRooms" id="infinite-loader-rooms">
+					<loader :show="showLoader" :infinite="true" />
+				</div>
 			</transition>
 		</div>
 	</div>
 </template>
 
 <script>
-import InfiniteLoading from 'vue-infinite-loading'
-import Loader from '../../components/Loader'
-import RoomsSearch from './RoomsSearch'
-import RoomContent from './RoomContent'
-import filteredUsers from '../../utils/filter-items'
+import Loader from '../../components/Loader/Loader'
+import RoomsSearch from './RoomsSearch/RoomsSearch'
+import RoomContent from './RoomContent/RoomContent'
+import filteredItems from '../../utils/filter-items'
 export default {
 	name: 'RoomsList',
 	components: {
-		InfiniteLoading,
 		Loader,
 		RoomsSearch,
 		RoomContent
@@ -87,6 +78,7 @@ export default {
 		currentUserId: { type: [String, Number], required: true },
 		textMessages: { type: Object, required: true },
 		showRoomsList: { type: Boolean, required: true },
+		showSearch: { type: Boolean, required: true },
 		showAddRoom: { type: Boolean, required: true },
 		textFormatting: { type: Boolean, required: true },
 		linkOptions: { type: Object, required: true },
@@ -97,35 +89,49 @@ export default {
 		room: { type: Object, required: true },
 		roomActions: { type: Array, required: true }
 	},
+	emits: [
+		'add-room',
+		'room-action-handler',
+		'loading-more-rooms',
+		'fetch-room',
+		'fetch-more-rooms'
+	],
 	data() {
 		return {
 			filteredRooms: this.rooms || [],
-			infiniteState: null,
+			observer: null,
+			showLoader: true,
 			loadingMoreRooms: false,
 			selectedRoomId: ''
 		}
 	},
 	watch: {
-		rooms(newVal, oldVal) {
-			this.filteredRooms = newVal
-			if (
-				this.infiniteState &&
-				(newVal.length !== oldVal.length || this.roomsLoaded)
-			) {
-				this.infiniteState.loaded()
-				this.loadingMoreRooms = false
+		rooms: {
+			deep: true,
+			handler(newVal, oldVal) {
+				this.filteredRooms = newVal
+				if (newVal.length !== oldVal.length || this.roomsLoaded) {
+					this.loadingMoreRooms = false
+				}
 			}
 		},
 		loadingRooms(val) {
-			if (val) this.infiniteState = null
+			if (!val) {
+				setTimeout(() => this.initIntersectionObserver())
+			}
 		},
 		loadingMoreRooms(val) {
 			this.$emit('loading-more-rooms', val)
 		},
-		roomsLoaded(val) {
-			if (val && this.infiniteState) {
-				this.loadingMoreRooms = false
-				this.infiniteState.complete()
+		roomsLoaded: {
+			immediate: true,
+			handler(val) {
+				if (val) {
+					this.loadingMoreRooms = false
+					if (!this.loadingRooms) {
+						this.showLoader = false
+					}
+				}
 			}
 		},
 		room: {
@@ -136,8 +142,28 @@ export default {
 		}
 	},
 	methods: {
+		initIntersectionObserver() {
+			if (this.observer) {
+				this.showLoader = true
+				this.observer.disconnect()
+			}
+			const loader = document.getElementById('infinite-loader-rooms')
+			if (loader) {
+				const options = {
+					root: document.getElementById('rooms-list'),
+					rootMargin: '60px',
+					threshold: 0
+				}
+				this.observer = new IntersectionObserver(entries => {
+					if (entries[0].isIntersecting) {
+						this.loadMoreRooms()
+					}
+				}, options)
+				this.observer.observe(loader)
+			}
+		},
 		searchRoom(ev) {
-			this.filteredRooms = filteredUsers(
+			this.filteredRooms = filteredItems(
 				this.rooms,
 				'roomName',
 				ev.target.value
@@ -148,85 +174,15 @@ export default {
 			if (!this.isMobile) this.selectedRoomId = room.roomId
 			this.$emit('fetch-room', { room })
 		},
-		loadMoreRooms(infiniteState) {
+		loadMoreRooms() {
 			if (this.loadingMoreRooms) return
 			if (this.roomsLoaded) {
 				this.loadingMoreRooms = false
-				return infiniteState.complete()
+				return (this.showLoader = false)
 			}
-			this.infiniteState = infiniteState
 			this.$emit('fetch-more-rooms')
 			this.loadingMoreRooms = true
 		}
 	}
 }
 </script>
-
-<style lang="scss">
-.vac-rooms-container {
-	display: flex;
-	flex-flow: column;
-	flex: 0 0 25%;
-	min-width: 260px;
-	max-width: 500px;
-	position: relative;
-	background: var(--chat-sidemenu-bg-color);
-	height: 100%;
-	border-top-left-radius: var(--chat-container-border-radius);
-	border-bottom-left-radius: var(--chat-container-border-radius);
-	&.vac-rooms-container-full {
-		flex: 0 0 100%;
-		max-width: 100%;
-	}
-	.vac-rooms-empty {
-		font-size: 14px;
-		color: #9ca6af;
-		font-style: italic;
-		text-align: center;
-		margin: 40px 0;
-		line-height: 20px;
-		white-space: pre-line;
-	}
-	.vac-room-list {
-		flex: 1;
-		position: relative;
-		max-width: 100%;
-		cursor: pointer;
-		padding: 0 10px 5px;
-		overflow-y: auto;
-	}
-	.vac-room-item {
-		border-radius: 8px;
-		align-items: center;
-		display: flex;
-		flex: 1 1 100%;
-		margin-bottom: 5px;
-		padding: 0 14px;
-		position: relative;
-		min-height: 71px;
-		&:hover {
-			background: var(--chat-sidemenu-bg-color-hover);
-			transition: background-color 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
-		}
-		&:not(:hover) {
-			transition: background-color 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
-		}
-	}
-	.vac-room-selected {
-		color: var(--chat-sidemenu-color-active) !important;
-		background: var(--chat-sidemenu-bg-color-active) !important;
-		&:hover {
-			background: var(--chat-sidemenu-bg-color-active) !important;
-		}
-	}
-	@media only screen and (max-width: 768px) {
-		.vac-room-list {
-			padding: 0 7px 5px;
-		}
-		.vac-room-item {
-			min-height: 60px;
-			padding: 0 8px;
-		}
-	}
-}
-</style>
