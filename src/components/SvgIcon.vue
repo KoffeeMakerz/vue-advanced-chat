@@ -7,7 +7,7 @@
 		height="24"
 		:viewBox="`0 0 ${size} ${size}`"
 	>
-		<path :id="svgId" :d="svgItem[name].path" :stroke="stroke" strokeWidth={1} />
+		<path :id="svgId" :d="svgItem[name].path" :stroke="stroke" strokeWidth="{1}" />
 		<path v-if="svgItem[name].path2" :id="svgId" :d="svgItem[name].path2" />
 	</svg>
 </template>
@@ -123,7 +123,7 @@ export default {
 			else return 24
 		},
 		stroke() {
-			return this.name === "close" ? "black" : null
+			return this.name === 'close' ? 'black' : null
 		}
 	}
 }
