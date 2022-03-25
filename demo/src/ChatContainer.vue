@@ -99,7 +99,7 @@ export default {
 			endRooms: null,
 			roomsLoaded: false,
 			loadingRooms: true,
-			allUsers: [],
+			allUsers: [{_id: "CEsCvwnoItkXmLKPWlYL"}, {_id: "6R0MijpK6M4AIrwaaCY2"}],
 			loadingLastMessageByRoom: 0,
 			roomsLoadedCount: false,
 			selectedRoom: null,
