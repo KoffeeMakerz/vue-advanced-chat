@@ -3,15 +3,10 @@ import 'firebase/firestore'
 import 'firebase/database'
 import 'firebase/storage'
 
-const config = {
-	apiKey: "AIzaSyDqLR6PYxy7q4VGK_85vzgGCJ7eQi7wIoo",
-	authDomain: "vue-chat-93670.firebaseapp.com",
-	projectId: "vue-chat-93670",
-	storageBucket: "vue-chat-93670.appspot.com",
-	messagingSenderId: "671610644085",
-	appId: "1:671610644085:web:f92fcee23f2f3010d8ba3c",
-	measurementId: "G-BJGQQ8BNLJ"
-};
+const config = 
+	process.env.NODE_ENV === 'development'
+		? JSON.parse(process.env.VUE_APP_FIREBASE_CONFIG)
+		: JSON.parse(process.env.VUE_APP_FIREBASE_CONFIG_PUBLIC)
 
 app.initializeApp(config)
 
