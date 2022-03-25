@@ -2,36 +2,42 @@
 	<div class="file-list">
         <div class="vac-file-image" :style="style">
             <div class="close-button vac-icon-remove" @click="closeFile">
-		        <svg-icon name="close" param="image" style="width:20px;" />
-		    </div>
+                <svg-icon name="close" param="image" style="width:20px;" /></div>
             <div v-show="!file.isNotDoc" class="doc-svg">
                 <svg-icon class="doc-svg-button" name="file" />
             </div>
             <div v-show="!file.isNotDoc" class="text-container">
-                <div class="vac-text-ellipsis">{{file.name}}</div>
-                <div class="vac-text-extension"><center>{{file.extension}}</center></div>
+                <div class="vac-text-ellipsis">
+                    {{ file.name }}
+                </div>
+                <div class="vac-text-extension">
+                    <center>{{ file.extension }}</center>
+                </div>
             </div>
         </div>
 	</div>
 </template>
 
 <script>
-    import SvgIcon from "../../components/SvgIcon.vue"
+    import SvgIcon from '../../components/SvgIcon.vue'
 
     export default {
         name: 'FileUpload',
-        components: {SvgIcon},
-        props: ['index', 'file'],
+        components: { SvgIcon },
+        props: {
+            index: { type: Number, default: null },
+            file: { type: Object, default: null }
+        },
+        computed: {
+            style() {
+                return this.file.isNotDoc ? `background-image: url("${this.file.localUrl}");` : null
+            }
+        },
         methods: {
             closeFile() {
                 this.$emit('close-single-file', this.index)
             }
-        },
-        computed: {
-            style() {
-                return this.file.isNotDoc ?`background-image: url("${this.file.localUrl}");` : null
-            }
-        },
+        }
     }
 </script>
 <style>
@@ -91,4 +97,3 @@
     align-content: center;
 }
 </style>
-
