@@ -118,7 +118,7 @@
 		</div>
 		<div v-show="!!files.length" class="vac-app-box-shadow files-list" style="bottom: 66px;">
 			<div class="vac-files-box">
-				<file-upload v-for="(file, index) in files" :key="index" :index="index" :file="file" @close-single-file="removeSingleFile" />
+				<file-upload v-for="(item, index) in files" :key="index" :index="index" :file="item" @close-single-file="removeSingleFile" />
 			</div>
 			<div style="float:right; padding-top:2px;" @click="closeUploadedFiles">
 				<svg-icon name="close-outline" />
@@ -258,7 +258,7 @@
 						v-if="showFiles"
 						ref="file"
 						type="file"
-						multiple = "multiple"
+						multiple="multiple"
 						:accept="acceptedFiles"
 						style="display:none"
 						@change="onFileChange($event.target.files)"
@@ -727,14 +727,6 @@ export default {
 			this.preventKeyboardFromClosing()
 			setTimeout(() => this.focusTextarea(disableMobileFocus))
 		},
-		resetMediaFile() {
-			this.mediaDimensions = null
-			this.imageFile = null
-			this.videoFile = null
-			this.editedMessage.file = null
-			this.file = null
-			this.focusTextarea()
-		},
 		resetTextareaSize() {
 			if (!this.$refs['roomTextarea']) return
 			this.$refs['roomTextarea'].style.height = '20px'
@@ -780,9 +772,9 @@ export default {
 					})
 				}
 			} else {
-				if(this.files.length){
-					for(let i = 0; i < this.files.length; i++){
-						const msg = i === (this.files.length - 1) ? message : ""
+				if (this.files.length) {
+					for (let i = 0; i < this.files.length; i++) {
+						const msg = i === (this.files.length - 1) ? message : ''
 						this.$emit('send-message', {
 							content: msg,
 							file: this.files[i],
@@ -790,7 +782,7 @@ export default {
 							usersTag: this.selectedUsersTag
 						})
 					}
-				} else{
+				} else {
 					this.$emit('send-message', {
 						content: message,
 						file: this.file,
@@ -898,7 +890,7 @@ export default {
 		},
 		async onFileChange(files) {
 			this.fileDialog = true
-			for(let i = 0; i < files.length; i++){
+			for (let i = 0; i < files.length; i++) {
 				const file = files[i]
 				const fileURL = URL.createObjectURL(file)
 				const blobFile = await fetch(fileURL).then(res => res.blob())
@@ -981,10 +973,10 @@ export default {
 		textareaActionHandler() {
 			this.$emit('textarea-action-handler', this.message)
 		},
-		removeSingleFile(index){
+		removeSingleFile(index) {
 			this.files.splice(index, 1)
 		},
-		closeUploadedFiles(){
+		closeUploadedFiles() {
 			this.files = []
 		}
 	}
