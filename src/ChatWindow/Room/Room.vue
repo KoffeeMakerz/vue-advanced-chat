@@ -520,12 +520,6 @@ export default {
 			this.typedMessage = this.message
 			delete this.typedMessages[roomId]
 
-			const storedMessage = localStorage.getItem(roomId)
-
-			if (storedMessage) {
-				this.message = storedMessage
-				this.onChangeInput()
-			}
 			if (this.typedMessage) {
 				this.message = this.typedMessage
 				this.typedMessage = ''
