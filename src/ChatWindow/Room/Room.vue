@@ -498,7 +498,6 @@ export default {
 		})
 
 		this.$refs['roomTextarea'].addEventListener('blur', () => {
-			this.resetFooterList()
 			if (isMobile) setTimeout(() => (this.keepKeyboardOpen = false))
 		})
 	},
@@ -680,7 +679,8 @@ export default {
 
 			this.cursorRangePosition =
 				position + user.username.length + space.length + 1
-			this.focusTextarea()
+				this.resetFooterList()
+				this.focusTextarea()
 		},
 		resetFooterList() {
 			this.filteredEmojis = []
