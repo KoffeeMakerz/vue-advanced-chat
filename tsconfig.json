@@ -5,5 +5,4 @@
 		"emitDeclarationOnly": true,
 		"outDir": "types"
 	},
-	"include": ["dist/**/*"]
 }
