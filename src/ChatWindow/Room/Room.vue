@@ -152,6 +152,7 @@
 			<room-users-tag
 				:filtered-users-tag="filteredUsersTag"
 				@select-user-tag="selectUserTag($event)"
+				style="background-color: white;"
 			/>
 
 			<div
