@@ -151,8 +151,8 @@
 
 			<room-users-tag
 				:filtered-users-tag="filteredUsersTag"
+				style="background-color: white !important; overflow-y: auto !important;;"
 				@select-user-tag="selectUserTag($event)"
-				style="background-color: white;"
 			/>
 
 			<div
@@ -574,7 +574,7 @@ export default {
 
 			if (
 				tagChar === '@' &&
-				(!this.room.users || this.room.users.length <= 2)
+				(!this.room.users || this.room.users.length < 2)
 			) {
 				return
 			}
