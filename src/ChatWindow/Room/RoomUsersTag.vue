@@ -43,6 +43,8 @@ export default {
 	flex-direction: column;
 	align-items: center;
 	width: 100%;
+	background-color: white !important;
+	overflow-y: auto !important;
 
 	.vac-tags-box {
 		display: flex;
@@ -51,6 +53,7 @@ export default {
 		overflow: hidden;
 		cursor: pointer;
 		background: var(--chat-footer-bg-color);
+		overflow-y: auto !important;
 
 		&:hover {
 			background: var(--chat-footer-bg-color-tag-active);

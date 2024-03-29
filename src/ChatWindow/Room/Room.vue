@@ -151,6 +151,7 @@
 
 			<room-users-tag
 				:filtered-users-tag="filteredUsersTag"
+				style="background-color: white !important; overflow-y: auto !important;;"
 				@select-user-tag="selectUserTag($event)"
 			/>
 
@@ -498,7 +499,6 @@ export default {
 		})
 
 		this.$refs['roomTextarea'].addEventListener('blur', () => {
-			this.resetFooterList()
 			if (isMobile) setTimeout(() => (this.keepKeyboardOpen = false))
 		})
 	},
@@ -574,7 +574,7 @@ export default {
 
 			if (
 				tagChar === '@' &&
-				(!this.room.users || this.room.users.length <= 2)
+				(!this.room.users || this.room.users.length < 2)
 			) {
 				return
 			}
@@ -680,7 +680,8 @@ export default {
 
 			this.cursorRangePosition =
 				position + user.username.length + space.length + 1
-			this.focusTextarea()
+				this.resetFooterList()
+				this.focusTextarea()
 		},
 		resetFooterList() {
 			this.filteredEmojis = []
