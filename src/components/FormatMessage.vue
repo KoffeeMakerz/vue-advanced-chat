@@ -131,9 +131,8 @@ export default {
 		},
 		formatTags(content) {
 			this.users.forEach(user => {
-				const index = content.indexOf(user._id)
-				const isTag = content.substring(index - 9, index) === '<usertag>'
-				if (isTag) content = content.replace(user._id, `@${user.username}`)
+				const userTagRegex = new RegExp(`<usertag>${user._id}</usertag>`, 'g')
+				content = content.replace(userTagRegex, `@${user.username}`)
 			})
 
 			return content
