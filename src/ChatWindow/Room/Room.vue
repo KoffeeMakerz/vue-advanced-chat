@@ -118,11 +118,24 @@
 				</div>
 			</transition>
 		</div>
-		<div v-show="!!files.length" class="vac-app-box-shadow files-list" style="bottom: 66px;">
+		<div
+			v-show="!!files.length"
+			class="vac-app-box-shadow files-list"
+			style="bottom: 66px"
+		>
 			<div class="vac-files-box">
-				<file-upload v-for="(item, index) in files" :key="index" :index="index" :file="item" @close-single-file="removeSingleFile" />
+				<file-upload
+					v-for="(item, index) in files"
+					:key="index"
+					:index="index"
+					:file="item"
+					@close-single-file="removeSingleFile"
+				/>
 			</div>
-			<div class="vac-svg-button vac-close-all-files" @click="closeUploadedFiles">
+			<div
+				class="vac-svg-button vac-close-all-files"
+				@click="closeUploadedFiles"
+			>
 				<svg-icon name="close-outline" />
 			</div>
 		</div>
@@ -151,7 +164,7 @@
 
 			<room-users-tag
 				:filtered-users-tag="filteredUsersTag"
-				style="background-color: white !important; overflow-y: auto !important;;"
+				style="background-color: white !important; overflow-y: auto !important"
 				@select-user-tag="selectUserTag($event)"
 			/>
 
@@ -161,41 +174,73 @@
 					'vac-app-box-shadow': filteredEmojis.length || filteredUsersTag.length
 				}"
 			>
-				<div
-					v-if="showAudio && !imageFile && !videoFile"
-					class="vac-icon-textarea-left"
-				>
-					<template v-if="isRecording">
-						<div
-							class="vac-svg-button vac-icon-audio-stop"
-							@click="stopRecorder"
-						>
-							<slot name="audio-stop-icon">
-								<svg-icon name="close-outline" />
+				<div class="vac-icon-textarea-left">
+					<div v-if="showAudio && !imageFile && !videoFile">
+						<template v-if="isRecording">
+							<div
+								class="vac-svg-button vac-icon-audio-stop"
+								@click="stopRecorder"
+							>
+								<slot name="audio-stop-icon">
+									<svg-icon name="close-outline" />
+								</slot>
+							</div>
+
+							<div class="vac-dot-audio-record" />
+
+							<div class="vac-dot-audio-record-time">
+								{{ recordedTime }}
+							</div>
+
+							<div
+								class="vac-svg-button vac-icon-audio-confirm"
+								@click="toggleRecorder(false)"
+							>
+								<slot name="audio-stop-icon">
+									<svg-icon name="checkmark" />
+								</slot>
+							</div>
+						</template>
+
+						<div v-else class="vac-svg-button" @click="toggleRecorder(true)">
+							<slot name="microphone-icon">
+								<svg-icon name="microphone" class="vac-icon-microphone" />
 							</slot>
 						</div>
+					</div>
 
-						<div class="vac-dot-audio-record" />
-
-						<div class="vac-dot-audio-record-time">
-							{{ recordedTime }}
-						</div>
-
-						<div
-							class="vac-svg-button vac-icon-audio-confirm"
-							@click="toggleRecorder(false)"
-						>
-							<slot name="audio-stop-icon">
-								<svg-icon name="checkmark" />
-							</slot>
-						</div>
-					</template>
-
-					<div v-else class="vac-svg-button" @click="toggleRecorder(true)">
-						<slot name="microphone-icon">
-							<svg-icon name="microphone" class="vac-icon-microphone" />
+					<div
+						v-if="showFiles"
+						class="vac-svg-button"
+						@click="launchFilePicker"
+					>
+						<slot name="paperclip-icon">
+							<svg-icon name="paperclip" />
 						</slot>
 					</div>
+
+					<input
+						v-if="showFiles"
+						ref="file"
+						type="file"
+						multiple="multiple"
+						:accept="acceptedFiles"
+						style="display: none"
+						@change="onFileChange($event.target.files)"
+					/>
+
+					<emoji-picker
+						v-if="showEmojis && (!file || imageFile || videoFile)"
+						:emoji-opened="emojiOpened"
+						:position-top="true"
+						:text-messages="textMessages"
+						@add-emoji="addEmoji"
+						@open-emoji="emojiOpened = $event"
+					>
+						<template v-for="(i, name) in $scopedSlots" #[name]="data">
+							<slot :name="name" v-bind="data" />
+						</template>
+					</emoji-picker>
 				</div>
 
 				<textarea
@@ -210,8 +255,9 @@
 					:style="{
 						'min-height': '20px',
 						'padding-left': '12px',
-						'max-height': files.length || messageReply ? 'calc(40vh - 100px)' : '40vh',
-						'overflow': 'auto'
+						'max-height':
+							files.length || messageReply ? 'calc(40vh - 100px)' : '40vh',
+						overflow: 'auto'
 					}"
 					@input="onChangeInput"
 					@keydown.esc="escapeTextarea"
@@ -228,28 +274,6 @@
 						</slot>
 					</div>
 
-					<emoji-picker
-						v-if="showEmojis && (!file || imageFile || videoFile)"
-						:emoji-opened="emojiOpened"
-						:position-top="true"
-						@add-emoji="addEmoji"
-						@open-emoji="emojiOpened = $event"
-					>
-						<template v-for="(i, name) in $scopedSlots" #[name]="data">
-							<slot :name="name" v-bind="data" />
-						</template>
-					</emoji-picker>
-
-					<div
-						v-if="showFiles"
-						class="vac-svg-button"
-						@click="launchFilePicker"
-					>
-						<slot name="paperclip-icon">
-							<svg-icon name="paperclip" />
-						</slot>
-					</div>
-
 					<div
 						v-if="textareaAction"
 						class="vac-svg-button"
@@ -260,25 +284,13 @@
 						</slot>
 					</div>
 
-					<input
-						v-if="showFiles"
-						ref="file"
-						type="file"
-						multiple="multiple"
-						:accept="acceptedFiles"
-						style="display:none"
-						@change="onFileChange($event.target.files)"
-					/>
-
 					<div
 						v-if="showSendIcon"
 						class="vac-svg-button"
 						:class="{ 'vac-send-disabled': isMessageEmpty }"
 						@click="sendMessage"
 					>
-						<slot name="send-icon">
-							<svg-icon name="send" :param="isMessageEmpty ? 'disabled' : ''" />
-						</slot>
+						<div class="vac-send-button">Send</div>
 					</div>
 				</div>
 			</div>
@@ -572,10 +584,7 @@ export default {
 		updateFooterList(tagChar) {
 			if (!this.$refs['roomTextarea']) return
 
-			if (
-				tagChar === '@' &&
-				(!this.room.users || this.room.users.length < 2)
-			) {
+			if (tagChar === '@' && (!this.room.users || this.room.users.length < 2)) {
 				return
 			}
 
@@ -680,8 +689,8 @@ export default {
 
 			this.cursorRangePosition =
 				position + user.username.length + space.length + 1
-				this.resetFooterList()
-				this.focusTextarea()
+			this.resetFooterList()
+			this.focusTextarea()
 		},
 		resetFooterList() {
 			this.filteredEmojis = []
@@ -900,7 +909,11 @@ export default {
 				const file = files[i]
 				const totalSize = this.selectedFilesSize + file.size
 
-				if (this.maxFilesSumSize && this.maxFileSize && (totalSize > this.maxFilesSumSize || file.size > this.maxFileSize)) {
+				if (
+					this.maxFilesSumSize &&
+					this.maxFileSize &&
+					(totalSize > this.maxFilesSumSize || file.size > this.maxFileSize)
+				) {
 					this.$emit('limit-size-exceeded')
 					this.closeUploadedFiles()
 					return
@@ -1010,6 +1023,8 @@ export default {
 	overflow: hidden;
 	display: flex;
 	flex-flow: column;
+	background-color: #ffffff;
+	padding: 15px;
 
 	.vac-container-center {
 		height: 100%;
@@ -1114,7 +1129,7 @@ export default {
 		border-radius: 20px 0px 0px 20px;
 		padding: 12px 16px;
 		box-sizing: content-box;
-		font-size: 16px;
+		font-size: 10.9px;
 		background: var(--chat-bg-color-input);
 		color: var(--chat-color);
 		caret-color: var(--chat-color-caret);
@@ -1152,6 +1167,18 @@ export default {
 		background-color: #fff;
 		border-radius: 0px 20px 20px 0px;
 		height: 44px;
+
+		.vac-send-button {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			padding: 4px 8px;
+			border-radius: 8px;
+			border: 1px solid #6c5a86;
+			background-color: aqua;
+			color: #6c5a86;
+			font-size: 10.27px;
+		}
 	}
 
 	.vac-icon-textarea-left {
@@ -1390,18 +1417,18 @@ export default {
 		}
 	}
 }
-.files-list{
+.files-list {
 	display: flex;
-    align-items: center;
-    padding: 10px 6px 0 6px;
+	align-items: center;
+	padding: 10px 6px 0 6px;
 }
-.vac-files-box{
+.vac-files-box {
 	display: flex;
-    overflow: auto;
-    width: calc(100% - 30px);
+	overflow: auto;
+	width: calc(100% - 30px);
 }
-.vac-close-all-files{
-	float:right;
-	padding-top:2px;
+.vac-close-all-files {
+	float: right;
+	padding-top: 2px;
 }
 </style>

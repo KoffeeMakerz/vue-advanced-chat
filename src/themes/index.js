@@ -33,7 +33,7 @@ export const defaultThemeStyles = {
 		},
 
 		content: {
-			background: '#F8F9FA'
+			background: '#F2F1F4'
 		},
 
 		sidemenu: {
@@ -51,9 +51,10 @@ export const defaultThemeStyles = {
 		},
 
 		message: {
-			background: '#fff',
-			backgroundMe: '#FFFFFF',
-			color: '#442D65',
+			background: '#FFFFFF',
+			backgroundMe: '#6C5A86',
+			color: '#473068',
+			colorMe: '#FFFFFF',
 			colorStarted: '#9ca6af',
 			backgroundDeleted: '#dadfe2',
 			colorDeleted: '#757e85',
@@ -349,6 +350,7 @@ export const cssThemeVars = ({
 		'--chat-message-bg-color-system': message.backgroundSystem,
 		'--chat-message-color-system': message.colorSystem,
 		'--chat-message-color': message.color,
+		'--chat-message-color-me': message.colorMe,
 		'--chat-message-bg-color-media': message.backgroundMedia,
 		'--chat-message-bg-color-reply': message.backgroundReply,
 		'--chat-message-color-reply-username': message.colorReplyUsername,
