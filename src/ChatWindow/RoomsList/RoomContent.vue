@@ -16,8 +16,8 @@
 					<div class="vac-room-name vac-text-ellipsis">
 						{{ room.roomName }}
 					</div>
-					<div v-if="room.lastMessage" class="vac-text-date">
-						{{ room.lastMessage.timestamp }}
+					<div v-if="5" class="vac-badge-counter vac-room-badge">
+						{{ 5 }}
 					</div>
 				</div>
 				<div
@@ -69,42 +69,10 @@
 					>
 						{{ typingUsers }}
 					</div>
-					<div class="vac-room-options-container">
-						<div
-							v-if="room.unreadCount"
-							class="vac-badge-counter vac-room-badge"
-						>
-							{{ room.unreadCount }}
+					<div class="vac-room-last-message-timestamp">
+						<div class="vac-text-date">
+							{{ room.lastMessage && room.lastMessage.timestamp }}
 						</div>
-						<slot name="room-list-options" v-bind="{ room }">
-							<div
-								v-if="roomActions.length"
-								class="vac-svg-button vac-list-room-options"
-								@click.stop="roomMenuOpened = room.roomId"
-							>
-								<slot name="room-list-options-icon">
-									<svg-icon name="dropdown" param="room" />
-								</slot>
-							</div>
-							<transition v-if="roomActions.length" name="vac-slide-left">
-								<div
-									v-if="roomMenuOpened === room.roomId"
-									v-click-outside="closeRoomMenu"
-									class="vac-menu-options"
-								>
-									<div class="vac-menu-list">
-										<div v-for="action in roomActions" :key="action.name">
-											<div
-												class="vac-menu-item"
-												@click.stop="roomActionHandler(action)"
-											>
-												{{ action.title }}
-											</div>
-										</div>
-									</div>
-								</div>
-							</transition>
-						</slot>
 					</div>
 				</div>
 			</div>
@@ -256,6 +224,7 @@ export default {
 		flex: 1;
 		color: var(--chat-room-color-username);
 		font-weight: 600;
+		max-width: 230px;
 	}
 
 	.vac-text-date {
@@ -294,7 +263,7 @@ export default {
 		fill: var(--chat-room-color-message);
 	}
 
-	.vac-room-options-container {
+	.vac-room-last-message-timestamp {
 		display: flex;
 		margin-left: auto;
 	}

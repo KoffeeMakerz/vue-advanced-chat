@@ -1,74 +1,74 @@
 <template>
-	<div class="vac-room-header vac-app-border-b">
-		<slot name="room-header" v-bind="{ room, typingUsers, userStatus }">
-			<div class="vac-room-wrapper">
-				<div
-					v-if="!singleRoom"
-					class="vac-svg-button vac-toggle-button"
-					:class="{ 'vac-rotate-icon': !showRoomsList && !isMobile }"
-					@click="$emit('toggle-rooms-list')"
-				>
-					<slot name="toggle-icon">
-						<svg-icon name="toggle" />
-					</slot>
-				</div>
-				<div
-					class="vac-info-wrapper"
-					:class="{ 'vac-item-clickable': roomInfo }"
-					@click="$emit('room-info')"
-				>
-					<slot name="room-header-avatar" v-bind="{ room }">
-						<div
-							v-if="room.avatar"
-							class="vac-avatar"
-							:style="{ 'background-image': `url('${room.avatar}')` }"
-						/>
-					</slot>
-					<slot
-						name="room-header-info"
-						v-bind="{ room, typingUsers, userStatus }"
-					>
-						<div class="vac-text-ellipsis">
-							<div class="vac-room-name vac-text-ellipsis">
-								{{ room.roomName }}
-							</div>
-							<div v-if="typingUsers" class="vac-room-info vac-text-ellipsis">
-								{{ typingUsers }}
-							</div>
-							<div v-else class="vac-room-info vac-text-ellipsis">
-								{{ userStatus }}
-							</div>
-						</div>
-					</slot>
-				</div>
-				<slot v-if="room.roomId" name="room-options">
+	<div>
+		<div class="vac-room-header vac-app-border-b">
+			<slot name="room-header" v-bind="{ room, typingUsers, userStatus }">
+				<div class="vac-room-wrapper">
 					<div
-						v-if="menuActions.length && !room.removedRoomStatus"
-						class="vac-svg-button vac-room-options"
-						@click="menuOpened = !menuOpened"
+						class="vac-info-wrapper"
+						:class="{ 'vac-item-clickable': roomInfo }"
+						@click="$emit('room-info')"
 					>
-						<slot name="menu-icon">
-							<svg-icon name="menu" />
-						</slot>
-					</div>
-					<transition v-if="menuActions.length" name="vac-slide-left">
-						<div
-							v-if="menuOpened"
-							v-click-outside="closeMenu"
-							class="vac-menu-options"
+						<slot
+							name="room-header-info"
+							v-bind="{ room, typingUsers, userStatus }"
 						>
-							<div class="vac-menu-list">
-								<div v-for="action in menuActions" :key="action.name">
-									<div class="vac-menu-item" @click="menuActionHandler(action)">
-										{{ action.title }}
-									</div>
+							<div class="vac-text-ellipsis">
+								<div
+									v-if="!room.isEditable"
+									class="vac-room-name vac-text-ellipsis"
+								>
+									{{ room.roomName }}
+								</div>
+								<div v-else class="vac-room-name vac-text-ellipsis">
+									<div class="vac-room-name-preview">{{ room.roomName }}</div>
+									<input
+										type="text"
+										placeholder="Room name"
+										autocomplete="off"
+										class="vac-room-name-input"
+										@input="$emit('rename-room', $event)"
+									/>
+								</div>
+								<div v-if="typingUsers" class="vac-room-info vac-text-ellipsis">
+									{{ typingUsers }}
+								</div>
+								<div v-else class="vac-room-info vac-text-ellipsis">
+									{{ userStatus }}
 								</div>
 							</div>
-						</div>
-					</transition>
-				</slot>
+						</slot>
+					</div>
+					<slot v-if="room.roomId" name="room-members"></slot>
+				</div>
+			</slot>
+		</div>
+		<div v-if="room.roomId" class="vac-tabs-container">
+			<div class="vac-tabs">
+				<div
+					class="vac-tab"
+					:class="{ active: activeTab === tabs.CHAT }"
+					@click="$emit('change-tab', tabs.CHAT)"
+				>
+					Chat
+				</div>
+				<div
+					class="vac-tab"
+					:class="{ active: activeTab === tabs.FILES }"
+					@click="$emit('change-tab', tabs.FILES)"
+				>
+					Files
+				</div>
+				<div
+					class="vac-tab"
+					:class="{ active: activeTab === tabs.PINNED }"
+					@click="$emit('change-tab', tabs.PINNED)"
+				>
+					Pinned
+				</div>
+				<div class="vac-tabs-slider"></div>
 			</div>
-		</slot>
+			<slot name="message-search"></slot>
+		</div>
 	</div>
 </template>
 
@@ -97,7 +97,9 @@ export default {
 		isMobile: { type: Boolean, required: true },
 		roomInfo: { type: Function, default: null },
 		menuActions: { type: Array, required: true },
-		room: { type: Object, required: true }
+		room: { type: Object, required: true },
+		activeTab: { type: String, default: 'chat' },
+		tabs: { type: Object, required: true }
 	},
 
 	data() {
@@ -142,13 +144,96 @@ export default {
 </script>
 
 <style lang="scss">
-.vac-room-header {
+.vac-tabs-container {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0px 16px 0px 57px;
+	gap: 20%;
+	background-color: var(--chat-tabs-bg-color);
+
+	.vac-tabs {
+		flex: 1;
+		display: flex;
+		position: relative;
+		gap: 20%;
+		height: 55px;
+	}
+
+	.vac-tabs-slider {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		height: 3px;
+		width: calc((100% - 40%) / 3);
+		background-color: #473068;
+		transition: transform 0.3s ease;
+	}
+	.vac-tab {
+		flex: 1;
+		display: flex;
+		padding: 10px 20px;
+		justify-content: center;
+		align-items: center;
+		color: #473068;
+		cursor: pointer;
+		transition: color 0.3s ease;
+	}
+
+	.vac-tab.active {
+		font-weight: 600;
+	}
+
+	.vac-tab:not(.active) {
+		font-weight: 400;
+	}
+
+	.vac-tab:hover {
+		font-weight: 600;
+	}
+
+	.vac-tabs .vac-tab:nth-child(1).active ~ .vac-tabs-slider {
+		transform: translateX(0px);
+	}
+
+	.vac-tabs .vac-tab:nth-child(2).active ~ .vac-tabs-slider {
+		transform: translateX(200%);
+	}
+
+	.vac-tabs .vac-tab:nth-child(3).active ~ .vac-tabs-slider {
+		transform: translateX(400%);
+	}
+
+	.search-message-field {
+		display: flex;
+		width: 158px;
+		height: 32px;
+		border-radius: 37px;
+		align-items: center;
+		padding: 0px 8px;
+		justify-content: space-between;
+		margin-bottom: 15px;
+	}
+
+	.search-icon {
+		color: #7e6e95;
+	}
+
+	.search-input {
+		margin-left: 5px;
+	}
+}
+.vac-room-header-container {
 	position: absolute;
+	z-index: 10;
+	width: 100%;
+}
+.vac-room-header {
 	display: flex;
 	align-items: center;
 	height: 64px;
 	width: 100%;
-	z-index: 10;
 	margin-right: 1px;
 	background: var(--chat-header-bg-color);
 	border-top-right-radius: var(--chat-container-border-radius);
@@ -161,16 +246,6 @@ export default {
 		height: 100%;
 		width: 100%;
 		padding: 0 16px;
-	}
-
-	.vac-toggle-button {
-		margin-right: 15px;
-		margin-top: 22px;
-
-		svg {
-			height: 26px;
-			width: 26px;
-		}
 	}
 
 	.vac-rotate-icon {
@@ -192,6 +267,35 @@ export default {
 		font-weight: 500;
 		line-height: 22px;
 		color: var(--chat-header-color-name);
+
+		.vac-room-name-input {
+			all: inherit;
+			display: none;
+		}
+
+		.vac-room-name-preview {
+			all: inherit;
+			display: block;
+		}
+
+		&:hover {
+			.vac-room-name-input {
+				display: block;
+				width: calc(100% - 20px);
+				background: var(--chat-search-color);
+				color: var(--chat-color);
+				border-radius: 4px;
+				font-size: 15px;
+				outline: 0;
+				caret-color: var(--chat-color-caret);
+				padding: 5px;
+				border: 0.5px solid var(--chat-sidemenu-border-color-search);
+				border-radius: 20px;
+			}
+			.vac-room-name-preview {
+				display: none;
+			}
+		}
 	}
 
 	.vac-room-info {

@@ -5,6 +5,7 @@
 				v-if="!singleRoom"
 				:current-user-id="currentUserId"
 				:rooms="orderedRooms"
+				:room-types="roomTypes"
 				:loading-rooms="loadingRooms"
 				:rooms-loaded="roomsLoaded"
 				:room="room"
@@ -65,6 +66,7 @@
 				@limit-size-exceeded="limitSizeExceeded"
 				@open-user-tag="openUserTag"
 				@menu-action-handler="menuActionHandler"
+				@rename-room="renameRoomActionHandler"
 				@message-action-handler="messageActionHandler"
 				@send-message-reaction="sendMessageReaction"
 				@typing-message="typingMessage"
@@ -106,6 +108,7 @@ export default {
 		textMessages: { type: Object, default: null },
 		currentUserId: { type: [String, Number], default: '' },
 		rooms: { type: Array, default: () => [] },
+		roomTypes: { type: Array, required: true },
 		loadingRooms: { type: Boolean, default: false },
 		roomsLoaded: { type: Boolean, default: false },
 		roomId: { type: [String, Number], default: null },
@@ -295,6 +298,12 @@ export default {
 		menuActionHandler(ev) {
 			this.$emit('menu-action-handler', {
 				action: ev,
+				roomId: this.room.roomId
+			})
+		},
+		renameRoomActionHandler(ev) {
+			this.$emit('rename-room', {
+				name: ev,
 				roomId: this.room.roomId
 			})
 		},

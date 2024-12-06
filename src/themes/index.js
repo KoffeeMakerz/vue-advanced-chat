@@ -19,16 +19,17 @@ export const defaultThemeStyles = {
 		},
 
 		header: {
-			background: '#fff',
+			background: '#F2F1F4',
 			colorRoomName: '#0a0a0a',
-			colorRoomInfo: '#9ca6af'
+			colorRoomInfo: '#9ca6af',
+			backgroundTabs: '#fff'
 		},
 
 		footer: {
-			background: 'none',
+			background: '#FFFFFF',
 			borderStyleInput: '1px solid #e1e4e8',
 			borderInputSelected: '#1976d2',
-			backgroundReply: '#e5e5e6',
+			backgroundReply: '#EDEBF2',
 			backgroundTagActive: '#e5e5e6'
 		},
 
@@ -38,6 +39,8 @@ export const defaultThemeStyles = {
 
 		sidemenu: {
 			background: '#fff',
+			backgroundRoom: '#F7F6F8',
+			backgroundRoomActive: '#D8D3DF',
 			backgroundHover: '#f6f6f6',
 			backgroundActive: '#F6F1FE',
 			colorActive: '#1976d2',
@@ -59,15 +62,18 @@ export const defaultThemeStyles = {
 			backgroundDeleted: '#dadfe2',
 			colorDeleted: '#757e85',
 			colorUsername: '#442D65',
-			colorTimestamp: '#828c94',
+			colorTimestamp: '#473068',
+			colorTimestampMe: '#FFFFFF',
 			backgroundDate: '#e5effa',
 			colorDate: '#505a62',
 			backgroundSystem: '#e5effa',
 			colorSystem: '#505a62',
 			backgroundMedia: 'rgba(0, 0, 0, 0.15)',
-			backgroundReply: 'rgba(0, 0, 0, 0.08)',
+			backgroundReply: '#5D497B',
+			backgroundReplyMe: '#EDEBF2',
 			colorReplyUsername: '#0a0a0a',
-			colorReply: '#6e6e6e',
+			colorReply: '#FFFFFF',
+			colorReplyMe: '#473068',
 			colorTag: '#0d579c',
 			backgroundImage: '#ddd',
 			colorNewMessages: '#442d65',
@@ -102,8 +108,8 @@ export const defaultThemeStyles = {
 			colorTimestamp: '#a2aeb8',
 			colorStateOnline: '#4caf50',
 			colorStateOffline: '#9ca6af',
-			backgroundCounterBadge: '#0696c7',
-			colorCounterBadge: '#fff'
+			backgroundCounterBadge: '#FFFFFF',
+			colorCounterBadge: '#473068'
 		},
 
 		emoji: {
@@ -126,8 +132,8 @@ export const defaultThemeStyles = {
 			emojiReaction: 'rgba(0, 0, 0, 0.3)',
 			document: '#442d65',
 			pencil: '#9e9e9e',
-			checkmark: '#9e9e9e',
-			checkmarkSeen: '#0696c7',
+			checkmark: '#FFFFFF',
+			checkmarkSeen: '#FFFFFF',
 			eye: '#fff',
 			dropdownMessage: '#fff',
 			dropdownMessageBackground: 'rgba(0, 0, 0, 0.25)',
@@ -165,7 +171,7 @@ export const defaultThemeStyles = {
 		},
 
 		footer: {
-			background: '#131415',
+			background: '#FFFFFF',
 			borderStyleInput: 'none',
 			borderInputSelected: '#1976d2',
 			backgroundReply: '#1b1c1c',
@@ -178,6 +184,8 @@ export const defaultThemeStyles = {
 
 		sidemenu: {
 			background: '#181a1b',
+			backgroundRoom: '#F7F6F8',
+			backgroundRoomActive: '#D8D3DF',
 			backgroundHover: '#202224',
 			backgroundActive: '#151617',
 			colorActive: '#fff',
@@ -197,15 +205,18 @@ export const defaultThemeStyles = {
 			backgroundDeleted: '#1b1c21',
 			colorDeleted: '#a2a5a8',
 			colorUsername: '#442D65',
-			colorTimestamp: '#ebedf2',
+			colorTimestamp: '#473068',
+			colorTimestampMe: '#FFFFFF',
 			backgroundDate: 'rgba(0, 0, 0, 0.3)',
 			colorDate: '#bec5cc',
 			backgroundSystem: 'rgba(0, 0, 0, 0.3)',
 			colorSystem: '#bec5cc',
 			backgroundMedia: 'rgba(0, 0, 0, 0.18)',
-			backgroundReply: 'rgba(0, 0, 0, 0.18)',
+			backgroundReply: '#5D497B',
+			backgroundReplyMe: '#EDEBF2',
 			colorReplyUsername: '#fff',
-			colorReply: '#d6d6d6',
+			colorReply: '#FFFFFF',
+			colorReplyMe: '#473068',
 			colorTag: '#f0c60a',
 			backgroundImage: '#ddd',
 			colorNewMessages: '#fff',
@@ -240,8 +251,8 @@ export const defaultThemeStyles = {
 			colorTimestamp: '#6c7278',
 			colorStateOnline: '#4caf50',
 			colorStateOffline: '#596269',
-			backgroundCounterBadge: '#1976d2',
-			colorCounterBadge: '#fff'
+			backgroundCounterBadge: '#FFFFFF',
+			colorCounterBadge: '#473068'
 		},
 
 		emoji: {
@@ -264,8 +275,8 @@ export const defaultThemeStyles = {
 			emojiReaction: '#fff',
 			document: '#1976d2',
 			pencil: '#ebedf2',
-			checkmark: '#ebedf2',
-			checkmarkSeen: '#f0d90a',
+			checkmark: '#FFFFFF',
+			checkmarkSeen: '#FFFFFF',
 			eye: '#fff',
 			dropdownMessage: '#fff',
 			dropdownMessageBackground: 'rgba(0, 0, 0, 0.25)',
@@ -312,6 +323,7 @@ export const cssThemeVars = ({
 
 		// header
 		'--chat-header-bg-color': header.background,
+		'--chat-tabs-bg-color': header.backgroundTabs,
 		'--chat-header-color-name': header.colorRoomName,
 		'--chat-header-color-info': header.colorRoomInfo,
 
@@ -327,6 +339,8 @@ export const cssThemeVars = ({
 
 		// sidemenu
 		'--chat-sidemenu-bg-color': sidemenu.background,
+		'--chat-sidemenu-room-bg': sidemenu.backgroundRoom,
+		'--chat-sidemenu-room-bg-active': sidemenu.backgroundRoomActive,
 		'--chat-sidemenu-bg-color-hover': sidemenu.backgroundHover,
 		'--chat-sidemenu-border-color-selected': sidemenu.leftBorderColor,
 		'--chat-sidemenu-bg-color-active': sidemenu.backgroundActive,
@@ -345,6 +359,7 @@ export const cssThemeVars = ({
 		'--chat-message-color-deleted': message.colorDeleted,
 		'--chat-message-color-username': message.colorUsername,
 		'--chat-message-color-timestamp': message.colorTimestamp,
+		'--chat-message-color-timestamp-me': message.colorTimestampMe,
 		'--chat-message-bg-color-date': message.backgroundDate,
 		'--chat-message-color-date': message.colorDate,
 		'--chat-message-bg-color-system': message.backgroundSystem,
@@ -352,9 +367,11 @@ export const cssThemeVars = ({
 		'--chat-message-color': message.color,
 		'--chat-message-color-me': message.colorMe,
 		'--chat-message-bg-color-media': message.backgroundMedia,
-		'--chat-message-bg-color-reply': message.backgroundReply,
+		'--chat-message-bg-color-reply': message.backgroundReplyMe,
+		'--chat-message-bg-color-reply-me': message.backgroundReply,
 		'--chat-message-color-reply-username': message.colorReplyUsername,
-		'--chat-message-color-reply-content': message.colorReply,
+		'--chat-message-color-reply-content': message.colorReplyMe,
+		'--chat-message-color-reply-content-me': message.colorReply,
 		'--chat-message-color-tag': message.colorTag,
 		'--chat-message-bg-color-image': message.backgroundImage,
 		'--chat-message-color-new-messages': message.colorNewMessages,

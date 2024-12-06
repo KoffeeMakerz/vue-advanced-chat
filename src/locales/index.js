@@ -8,6 +8,7 @@ export default {
 	SEARCH_EMOJI: 'Search emoji',
 	TYPE_MESSAGE: 'Type a new message here',
 	SEARCH: 'Search',
+	SEARCH_MESSAGES: 'Search Messages',
 	IS_ONLINE: 'is online',
 	LAST_SEEN: 'last seen ',
 	IS_TYPING: 'is writing...'

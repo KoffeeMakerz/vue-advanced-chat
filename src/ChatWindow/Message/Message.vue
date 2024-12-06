@@ -75,6 +75,7 @@
 							:room-users="roomUsers"
 							:text-formatting="textFormatting"
 							:link-options="linkOptions"
+							:current-user-id="currentUserId"
 							@show-reply-message="showReplyMessage"
 						>
 							<template v-for="(i, name) in $scopedSlots" #[name]="data">
@@ -174,6 +175,34 @@
 							{{ progressTime }}
 						</div>
 
+						<div
+							class="vac-text-timestamp"
+							:class="{
+								'vac-text-timestamp-me': message.senderId === currentUserId
+							}"
+						>
+							<div
+								v-if="message.edited && !message.deleted"
+								class="vac-icon-edited"
+							>
+								<slot name="pencil-icon">
+									<svg-icon name="pencil" />
+								</slot>
+							</div>
+							<span>{{ message.timestamp }}</span>
+							<span v-if="isCheckmarkVisible">
+								<slot name="checkmark-icon" v-bind="{ message }">
+									<svg-icon
+										:name="
+											message.distributed ? 'double-checkmark' : 'checkmark'
+										"
+										:param="message.seen ? 'seen' : ''"
+										class="vac-icon-check"
+									/>
+								</slot>
+							</span>
+						</div>
+
 						<message-actions
 							v-if="!isUploading && showMessageOption"
 							:current-user-id="currentUserId"
@@ -198,38 +227,12 @@
 						</message-actions>
 					</div>
 
-					<!-- <message-reactions
+					<message-reactions
 						:current-user-id="currentUserId"
 						:message="message"
 						:emojis-list="emojisList"
 						@send-message-reaction="sendMessageReaction($event)"
-					/> -->
-
-					<div
-						class="vac-text-timestamp"
-						:class="{
-							'vac-text-timestamp-offset': message.senderId === currentUserId
-						}"
-					>
-						<div
-							v-if="message.edited && !message.deleted"
-							class="vac-icon-edited"
-						>
-							<slot name="pencil-icon">
-								<svg-icon name="pencil" />
-							</slot>
-						</div>
-						<span>{{ message.timestamp }}</span>
-						<span v-if="isCheckmarkVisible">
-							<slot name="checkmark-icon" v-bind="{ message }">
-								<svg-icon
-									:name="message.distributed ? 'double-checkmark' : 'checkmark'"
-									:param="message.seen ? 'seen' : ''"
-									class="vac-icon-check"
-								/>
-							</slot>
-						</span>
-					</div>
+					/>
 				</div>
 			</slot>
 		</div>
@@ -605,14 +608,12 @@ export default {
 	}
 
 	.vac-text-timestamp {
-		font-size: 9.08px;
 		color: var(--chat-message-color-timestamp);
-		text-align: left;
-		margin-top: 5px;
-		margin-bottom: 5px;
+		text-align: right;
 	}
 
-	.vac-text-timestamp-offset {
+	.vac-text-timestamp-me {
+		color: var(--chat-message-color-timestamp-me);
 		text-align: right;
 	}
 
