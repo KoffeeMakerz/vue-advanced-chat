@@ -309,11 +309,11 @@
 
 						<div
 							v-if="showSendIcon"
-							class="vac-svg-button"
+							class="vac-send-button"
 							:class="{ 'vac-send-disabled': isMessageEmpty }"
 							@click="sendMessage"
 						>
-							<div class="vac-send-button">Send</div>
+							Send
 						</div>
 					</div>
 				</div>
@@ -1166,7 +1166,7 @@ export default {
 		border-radius: 20px 0px 0px 20px;
 		padding: 12px 16px;
 		box-sizing: content-box;
-		font-size: 10.9px;
+		font-size: 16px;
 		background: var(--chat-bg-color-input);
 		color: var(--chat-color);
 		caret-color: var(--chat-color-caret);
@@ -1209,12 +1209,12 @@ export default {
 			display: flex;
 			justify-content: center;
 			align-items: center;
-			padding: 4px 8px;
-			border-radius: 8px;
+			padding: 4px 12px;
+			border-radius: 13px;
 			border: 1px solid #6c5a86;
-			background-color: aqua;
+			background-color: rgba(108, 90, 134, 0.06);
 			color: #6c5a86;
-			font-size: 10.27px;
+			font-size: 15px;
 		}
 	}
 
@@ -1222,7 +1222,7 @@ export default {
 		display: flex;
 		align-items: flex-end;
 		margin-right: 5px;
-		padding-bottom: 15px;
+		padding-bottom: 10px;
 
 		svg,
 		.vac-wrapper {

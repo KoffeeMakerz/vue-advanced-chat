@@ -16,8 +16,8 @@
 					<div class="vac-room-name vac-text-ellipsis">
 						{{ room.roomName }}
 					</div>
-					<div v-if="5" class="vac-badge-counter vac-room-badge">
-						{{ 5 }}
+					<div v-if="room.unreadCount" class="vac-badge-counter vac-room-badge">
+						{{ room.unreadCount }}
 					</div>
 				</div>
 				<div

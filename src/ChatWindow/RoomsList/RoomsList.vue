@@ -23,11 +23,18 @@
 						<svg-icon v-if="expandedGroups.includes(group.id)" name="dropup" />
 						<svg-icon v-else name="dropdown" />
 					</div>
-					<div v-if="room.unreadCount" class="vac-badge-counter vac-room-badge">
-						{{ room.unreadCount }}
+					<div
+						v-if="group.unreadCount"
+						class="vac-badge-counter vac-room-badge"
+					>
+						{{ group.unreadCount }}
 					</div>
 				</div>
-				<div class="vac-svg-button vac-add-icon" @click="$emit('add-room')">
+				<div
+					v-if="group.showAddRoom"
+					class="vac-svg-button vac-add-icon"
+					@click="$emit('add-room')"
+				>
 					<slot name="add-icon">
 						<svg-icon name="add" />
 					</slot>

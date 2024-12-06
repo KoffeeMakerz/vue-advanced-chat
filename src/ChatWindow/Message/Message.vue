@@ -529,7 +529,7 @@ export default {
 		background: var(--chat-message-bg-color);
 		color: var(--chat-message-color);
 		border-radius: 5px;
-		font-size: 10.9px;
+		font-size: 15px;
 		padding: 6px 9px 3px;
 		white-space: pre-line;
 		max-width: 100%;
