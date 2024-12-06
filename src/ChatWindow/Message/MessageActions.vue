@@ -40,7 +40,6 @@
 					:emoji-opened="emojiOpened"
 					:emoji-reaction="true"
 					:room-footer-ref="roomFooterRef"
-					:position-right="message.senderId === currentUserId"
 					@add-emoji="sendMessageReaction"
 					@open-emoji="openEmoji"
 				>
@@ -181,8 +180,8 @@ export default {
 					return
 				}
 
-				const menuOptionsTop = this.$refs.menuOptions.getBoundingClientRect()
-					.height
+				const menuOptionsTop =
+					this.$refs.menuOptions.getBoundingClientRect().height
 
 				const actionIconTop = this.$refs.actionIcon.getBoundingClientRect().top
 				const roomFooterTop = this.roomFooterRef.getBoundingClientRect().top

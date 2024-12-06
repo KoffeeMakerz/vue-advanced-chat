@@ -76,7 +76,6 @@ export default {
 		emojiReaction: { type: Boolean, default: false },
 		roomFooterRef: { type: HTMLDivElement, default: null },
 		positionTop: { type: Boolean, default: false },
-		positionRight: { type: Boolean, default: false },
 		textMessages: { type: Object, required: true }
 	},
 
