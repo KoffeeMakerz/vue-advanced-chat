@@ -39,6 +39,16 @@
 			:current-user-id="currentUserId"
 			:room-id="roomId"
 			:rooms="loadedRooms"
+			:room-types="[
+				{
+					id: 1,
+					name: 'Group Messages',
+					type: 'group',
+					showAddRoom: true,
+					unreadCount: 5
+				},
+				{ id: 2, name: 'Direct Messages', type: 'direct' }
+			]"
 			:loading-rooms="loadingRooms"
 			:messages="messages"
 			:messages-loaded="messagesLoaded"
@@ -61,6 +71,15 @@
 			@typing-message="typingMessage"
 			@toggle-rooms-list="$emit('show-demo-options', $event.opened)"
 		>
+			<template v-slot:files-tab-content>
+				<div>No files yet.</div>
+			</template>
+			<template v-slot:pinned-tab-content>
+				<div>No Pined yet.</div>
+			</template>
+			<template v-slot:message-search>
+				<messages-search />
+			</template>
 		</chat-window>
 	</div>
 </template>
@@ -76,6 +95,7 @@ import {
 } from '@/firestore'
 import { parseTimestamp, isSameDay } from '@/utils/dates'
 import ChatWindow from './../../src/ChatWindow'
+import MessagesSearch from '../../src/ChatWindow/Message/MessagesSearch.vue'
 // import ChatWindow, { Rooms } from 'vue-advanced-chat'
 // import ChatWindow from 'vue-advanced-chat'
 // import 'vue-advanced-chat/dist/vue-advanced-chat.css'
@@ -83,7 +103,8 @@ import ChatWindow from './../../src/ChatWindow'
 
 export default {
 	components: {
-		ChatWindow
+		ChatWindow,
+		MessagesSearch
 	},
 
 	props: ['currentUserId', 'theme', 'isDevice'],
@@ -144,7 +165,14 @@ export default {
 
 	computed: {
 		loadedRooms() {
-			return this.rooms.slice(0, this.roomsLoadedCount)
+			return [
+				...this.rooms
+					.slice(0, this.roomsLoadedCount - 3)
+					.map(room => ({ ...room, type: 'group' })),
+				...this.rooms
+					.slice(this.roomsLoadedCount - 2, this.roomsLoadedCount)
+					.map(room => ({ ...room, type: 'direct' }))
+			]
 		},
 		screenHeight() {
 			return this.isDevice ? window.innerHeight + 'px' : 'calc(100vh - 80px)'
