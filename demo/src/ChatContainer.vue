@@ -80,6 +80,9 @@
 			<template v-slot:message-search>
 				<messages-search />
 			</template>
+			<template v-slot:room-members>
+				<div>Members</div>
+			</template>
 		</chat-window>
 	</div>
 </template>
@@ -168,7 +171,7 @@ export default {
 			return [
 				...this.rooms
 					.slice(0, this.roomsLoadedCount - 3)
-					.map(room => ({ ...room, type: 'group' })),
+					.map(room => ({ ...room, type: 'group', isEditable: true })),
 				...this.rooms
 					.slice(this.roomsLoadedCount - 2, this.roomsLoadedCount)
 					.map(room => ({ ...room, type: 'direct' }))

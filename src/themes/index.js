@@ -20,7 +20,7 @@ export const defaultThemeStyles = {
 
 		header: {
 			background: '#F2F1F4',
-			colorRoomName: '#0a0a0a',
+			colorRoomName: '#473068',
 			colorRoomInfo: '#9ca6af',
 			backgroundTabs: '#fff'
 		},
@@ -166,7 +166,7 @@ export const defaultThemeStyles = {
 
 		header: {
 			background: '#181a1b',
-			colorRoomName: '#fff',
+			colorRoomName: '#473068',
 			colorRoomInfo: '#9ca6af'
 		},
 

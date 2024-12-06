@@ -1152,7 +1152,6 @@ export default {
 		position: relative;
 		background: var(--chat-footer-bg-color);
 		align-items: flex-end;
-		margin-right: 20px;
 		border-radius: 7px;
 	}
 

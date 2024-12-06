@@ -20,11 +20,7 @@ import SvgIcon from '../../components/SvgIcon'
 
 export default {
 	name: 'MessagesSearch',
-	components: { SvgIcon },
-
-	props: {
-		textMessages: { type: Object, required: true }
-	}
+	components: { SvgIcon }
 }
 </script>
 

@@ -223,7 +223,6 @@ export default {
 				const group = rooms.filter(room => room.type === type.type)
 				return { ...type, rooms: group }
 			})
-			console.log(this.groupRooms)
 		}
 	}
 }
@@ -269,7 +268,7 @@ export default {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		height: 64px;
+		height: 44px;
 		margin: 0px 10px 10px;
 		background: var(--chat-header-bg-color);
 		width: calc(100% - 20px);

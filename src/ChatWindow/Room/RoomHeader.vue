@@ -20,14 +20,23 @@
 									{{ room.roomName }}
 								</div>
 								<div v-else class="vac-room-name vac-text-ellipsis">
-									<div class="vac-room-name-preview">{{ room.roomName }}</div>
 									<input
+										v-if="roomNameEditing"
 										type="text"
 										placeholder="Room name"
 										autocomplete="off"
 										class="vac-room-name-input"
-										@input="$emit('rename-room', $event)"
+										v-model="temporaryRoomName"
+										@keypress="$event.key === 'Enter' && changeRoomName()"
+										@blur="changeRoomName"
 									/>
+									<div
+										v-else
+										class="vac-room-name-preview"
+										@click="roomNameEditing = true"
+									>
+										{{ room.roomName }}
+									</div>
 								</div>
 								<div v-if="typingUsers" class="vac-room-info vac-text-ellipsis">
 									{{ typingUsers }}
@@ -104,7 +113,9 @@ export default {
 
 	data() {
 		return {
-			menuOpened: false
+			menuOpened: false,
+			temporaryRoomName: this.room.roomName,
+			roomNameEditing: false
 		}
 	},
 
@@ -138,6 +149,13 @@ export default {
 		},
 		closeMenu() {
 			this.menuOpened = false
+		},
+		changeRoomName() {
+			this.roomNameEditing = false
+			if (this.temporaryRoomName !== this.room.roomName) {
+				this.$emit('rename-room', this.temporaryRoomName)
+				this.temporaryRoomName = this.room.roomName
+			}
 		}
 	}
 }
@@ -231,7 +249,7 @@ export default {
 .vac-room-header {
 	display: flex;
 	align-items: center;
-	height: 64px;
+	height: 44px;
 	width: 100%;
 	margin-right: 1px;
 	background: var(--chat-header-bg-color);
@@ -262,38 +280,29 @@ export default {
 	}
 
 	.vac-room-name {
-		font-size: 17px;
-		font-weight: 500;
+		font-size: 18px;
+		font-weight: 600;
 		line-height: 22px;
 		color: var(--chat-header-color-name);
 
 		.vac-room-name-input {
 			all: inherit;
-			display: none;
+			display: block;
+			width: calc(100% - 40px);
+			color: var(--chat-color);
+			border-radius: 4px;
+			font-size: 18px;
+			font-weight: normal;
+			outline: 0;
+			caret-color: var(--chat-color-caret);
+			padding: 5px 15px;
+			border: 0.5px solid var(--chat-sidemenu-border-color-search);
+			border-radius: 20px;
 		}
 
 		.vac-room-name-preview {
 			all: inherit;
 			display: block;
-		}
-
-		&:hover {
-			.vac-room-name-input {
-				display: block;
-				width: calc(100% - 20px);
-				background: var(--chat-search-color);
-				color: var(--chat-color);
-				border-radius: 4px;
-				font-size: 15px;
-				outline: 0;
-				caret-color: var(--chat-color-caret);
-				padding: 5px;
-				border: 0.5px solid var(--chat-sidemenu-border-color-search);
-				border-radius: 20px;
-			}
-			.vac-room-name-preview {
-				display: none;
-			}
 		}
 	}
 
