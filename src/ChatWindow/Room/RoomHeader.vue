@@ -213,7 +213,6 @@ export default {
 		align-items: center;
 		padding: 0px 8px;
 		justify-content: space-between;
-		margin-bottom: 15px;
 	}
 
 	.search-icon {

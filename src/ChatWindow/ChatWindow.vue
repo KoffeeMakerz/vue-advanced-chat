@@ -56,6 +56,7 @@
 				:accepted-files="acceptedFiles"
 				:max-file-size="maxFileSize"
 				:max-files-sum-size="maxFilesSumSize"
+				:active-tab="activeTab"
 				@toggle-rooms-list="toggleRoomsList"
 				@room-info="roomInfo"
 				@fetch-messages="fetchMessages"
@@ -72,6 +73,7 @@
 				@typing-message="typingMessage"
 				@textarea-action-handler="textareaActionHandler"
 				@show-reply-message="showReplyMessage"
+				@change-tab="changeTab"
 			>
 				<template v-for="(i, name) in $scopedSlots" #[name]="data">
 					<slot :name="name" v-bind="data" />
@@ -142,7 +144,8 @@ export default {
 		roomMessage: { type: String, default: '' },
 		acceptedFiles: { type: String, default: '*' },
 		maxFileSize: { type: Number, default: null },
-		maxFilesSumSize: { type: Number, default: null }
+		maxFilesSumSize: { type: Number, default: null },
+		activeTab: { type: String, default: 'chat' }
 	},
 
 	data() {
@@ -339,6 +342,9 @@ export default {
 		},
 		showReplyMessage(message) {
 			this.$emit('show-reply-message', message)
+		},
+		changeTab(tab) {
+			this.$emit('change-tab', tab)
 		}
 	}
 }

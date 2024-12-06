@@ -21,7 +21,7 @@
 			:menu-actions="menuActions"
 			:room="room"
 			:tabs="tabs"
-			@change-tab="activeTab = $event"
+			@change-tab="$emit('change-tab', $event)"
 			@toggle-rooms-list="$emit('toggle-rooms-list')"
 			@room-info="$emit('room-info')"
 			@menu-action-handler="$emit('menu-action-handler', $event)"
@@ -390,7 +390,8 @@ export default {
 		linkOptions: { type: Object, required: true },
 		loadingRooms: { type: Boolean, required: true },
 		roomInfo: { type: Function, default: null },
-		textareaAction: { type: Function, default: null }
+		textareaAction: { type: Function, default: null },
+		activeTab: { type: String, default: 'chat' }
 	},
 
 	data() {
@@ -422,7 +423,6 @@ export default {
 			recorder: this.initRecorder(),
 			isRecording: false,
 			format: 'mp3',
-			activeTab: 'chat',
 			tabs: {
 				CHAT: 'chat',
 				FILES: 'files',
