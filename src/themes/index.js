@@ -20,6 +20,7 @@ export const defaultThemeStyles = {
 
 		header: {
 			background: '#F2F1F4',
+			border: 'rgba(71, 48, 104, 0.09)',
 			colorRoomName: '#473068',
 			colorRoomInfo: '#9ca6af',
 			backgroundTabs: '#fff'
@@ -40,7 +41,8 @@ export const defaultThemeStyles = {
 		sidemenu: {
 			background: '#fff',
 			backgroundRoom: '#F7F6F8',
-			backgroundRoomActive: '#D8D3DF',
+			backgroundRoomActive: 'rgba(227, 222, 235, 0.46)',
+			roomActiveBorder: 'rgba(71, 48, 104, 0.4)',
 			backgroundHover: '#f6f6f6',
 			backgroundActive: '#F6F1FE',
 			colorActive: '#1976d2',
@@ -128,13 +130,15 @@ export const defaultThemeStyles = {
 			closeOutline: '#000',
 			send: '#FFFFFF',
 			sendDisabled: '#9ca6af',
-			emoji: '#442d65',
+			emoji: '#473068',
 			emojiReaction: 'rgba(0, 0, 0, 0.3)',
 			document: '#442d65',
 			pencil: '#9e9e9e',
 			checkmark: '#FFFFFF',
 			checkmarkSeen: '#FFFFFF',
 			eye: '#fff',
+			dropdown: '#473068',
+			dropup: '#473068',
 			dropdownMessage: '#fff',
 			dropdownMessageBackground: 'rgba(0, 0, 0, 0.25)',
 			dropdownRoom: '#9e9e9e',
@@ -166,6 +170,7 @@ export const defaultThemeStyles = {
 
 		header: {
 			background: '#181a1b',
+			border: 'rgba(71, 48, 104, 0.09)',
 			colorRoomName: '#473068',
 			colorRoomInfo: '#9ca6af'
 		},
@@ -185,7 +190,8 @@ export const defaultThemeStyles = {
 		sidemenu: {
 			background: '#181a1b',
 			backgroundRoom: '#F7F6F8',
-			backgroundRoomActive: '#D8D3DF',
+			backgroundRoomActive: 'rgba(227, 222, 235, 0.46)',
+			roomActiveBorder: 'rgba(71, 48, 104, 0.4)',
 			backgroundHover: '#202224',
 			backgroundActive: '#151617',
 			colorActive: '#fff',
@@ -271,13 +277,15 @@ export const defaultThemeStyles = {
 			closeOutline: '#fff',
 			send: '#fff',
 			sendDisabled: '#646a70',
-			emoji: '#fff',
+			emoji: '#473068',
 			emojiReaction: '#fff',
 			document: '#1976d2',
 			pencil: '#ebedf2',
 			checkmark: '#FFFFFF',
 			checkmarkSeen: '#FFFFFF',
 			eye: '#fff',
+			dropdown: '#473068',
+			dropup: '#473068',
 			dropdownMessage: '#fff',
 			dropdownMessageBackground: 'rgba(0, 0, 0, 0.25)',
 			dropdownRoom: '#fff',
@@ -323,6 +331,7 @@ export const cssThemeVars = ({
 
 		// header
 		'--chat-header-bg-color': header.background,
+		'--chat-header-border-color': header.border,
 		'--chat-tabs-bg-color': header.backgroundTabs,
 		'--chat-header-color-name': header.colorRoomName,
 		'--chat-header-color-info': header.colorRoomInfo,
@@ -341,6 +350,7 @@ export const cssThemeVars = ({
 		'--chat-sidemenu-bg-color': sidemenu.background,
 		'--chat-sidemenu-room-bg': sidemenu.backgroundRoom,
 		'--chat-sidemenu-room-bg-active': sidemenu.backgroundRoomActive,
+		'--chat-sidemenu-room-bg-active-border': sidemenu.roomActiveBorder,
 		'--chat-sidemenu-bg-color-hover': sidemenu.backgroundHover,
 		'--chat-sidemenu-border-color-selected': sidemenu.leftBorderColor,
 		'--chat-sidemenu-bg-color-active': sidemenu.backgroundActive,
@@ -433,6 +443,8 @@ export const cssThemeVars = ({
 		'--chat-icon-color-checkmark': icons.checkmark,
 		'--chat-icon-color-checkmark-seen': icons.checkmarkSeen,
 		'--chat-icon-color-eye': icons.eye,
+		'--chat-icon-color-dropdown': icons.dropdown,
+		'--chat-icon-color-dropup': icons.dropup,
 		'--chat-icon-color-dropdown-message': icons.dropdownMessage,
 		'--chat-icon-bg-dropdown-message': icons.dropdownMessageBackground,
 		'--chat-icon-color-dropdown-room': icons.dropdownRoom,

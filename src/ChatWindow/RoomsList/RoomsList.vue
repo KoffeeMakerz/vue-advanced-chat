@@ -1,98 +1,103 @@
 <template>
-	<div
-		v-show="showRoomsList"
-		class="vac-rooms-container vac-app-border-r"
-		:class="{ 'vac-rooms-container-full': isMobile }"
-	>
-		<loader :show="loadingRooms" />
-
+	<div class="vac-rooms-container-parent">
 		<div
-			v-for="(group, groupIndex) in groupRooms"
-			:key="group.id"
-			class="vac-room-group-container"
-			:class="{
-				'vac-room-group-container-expanded': expandedGroups.includes(group.id)
-			}"
+			v-show="showRoomsList"
+			class="vac-rooms-container vac-app-border-r"
+			:class="{ 'vac-rooms-container-full': isMobile }"
 		>
-			<div v-if="!loadingRooms" class="vac-room-header-container">
-				<div class="vac-room-details-container">
-					<div class="vac-room-name" @click="toggleGroupExpand(group.id)">
-						{{ group.name }}
-					</div>
-					<div class="vac-group-expand" @click="toggleGroupExpand(group.id)">
-						<svg-icon v-if="expandedGroups.includes(group.id)" name="dropup" />
-						<svg-icon v-else name="dropdown" />
+			<loader :show="loadingRooms" />
+
+			<div
+				v-for="(group, groupIndex) in groupRooms"
+				:key="group.id"
+				class="vac-room-group-container"
+				:class="{
+					'vac-room-group-container-expanded': expandedGroups.includes(group.id)
+				}"
+			>
+				<div v-if="!loadingRooms" class="vac-room-header-container">
+					<div class="vac-room-details-container">
+						<div class="vac-room-name" @click="toggleGroupExpand(group.id)">
+							{{ group.name }}
+						</div>
+						<div class="vac-group-expand" @click="toggleGroupExpand(group.id)">
+							<svg-icon
+								v-if="expandedGroups.includes(group.id)"
+								name="dropup"
+							/>
+							<svg-icon v-else name="dropdown" />
+						</div>
+						<div
+							v-if="group.unreadCount"
+							class="vac-badge-counter vac-room-badge"
+						>
+							{{ group.unreadCount }}
+						</div>
 					</div>
 					<div
-						v-if="group.unreadCount"
-						class="vac-badge-counter vac-room-badge"
+						v-if="group.showAddRoom"
+						class="vac-svg-button vac-add-icon"
+						@click="$emit('add-room')"
 					>
-						{{ group.unreadCount }}
+						<slot name="add-icon">
+							<svg-icon name="add" />
+						</slot>
 					</div>
 				</div>
+
 				<div
-					v-if="group.showAddRoom"
-					class="vac-svg-button vac-add-icon"
-					@click="$emit('add-room')"
+					v-if="
+						!loadingRooms && !rooms.length && expandedGroups.includes(group.id)
+					"
+					class="vac-rooms-empty"
 				>
-					<slot name="add-icon">
-						<svg-icon name="add" />
+					<slot name="rooms-empty">
+						{{ textMessages.ROOMS_EMPTY }}
 					</slot>
 				</div>
-			</div>
 
-			<div
-				v-if="
-					!loadingRooms && !rooms.length && expandedGroups.includes(group.id)
-				"
-				class="vac-rooms-empty"
-			>
-				<slot name="rooms-empty">
-					{{ textMessages.ROOMS_EMPTY }}
-				</slot>
-			</div>
-
-			<div
-				v-if="!loadingRooms && expandedGroups.includes(group.id)"
-				class="vac-room-list"
-			>
 				<div
-					v-for="fRoom in groupRooms[groupIndex].rooms"
-					:id="fRoom.roomId"
-					:key="fRoom.roomId"
-					class="vac-room-item"
-					:class="{ 'vac-room-selected': selectedRoomId === fRoom.roomId }"
-					@click="openRoom(fRoom)"
+					v-if="!loadingRooms && expandedGroups.includes(group.id)"
+					class="vac-room-list"
 				>
-					<room-content
-						:current-user-id="currentUserId"
-						:room="fRoom"
-						:text-formatting="textFormatting"
-						:link-options="linkOptions"
-						:text-messages="textMessages"
-						:room-actions="roomActions"
-						@room-action-handler="$emit('room-action-handler', $event)"
+					<div
+						v-for="fRoom in groupRooms[groupIndex].rooms"
+						:id="fRoom.roomId"
+						:key="fRoom.roomId"
+						class="vac-room-item"
+						:class="{ 'vac-room-selected': selectedRoomId === fRoom.roomId }"
+						@click="openRoom(fRoom)"
 					>
-						<template v-for="(i, name) in $scopedSlots" #[name]="data">
-							<slot :name="name" v-bind="data" />
-						</template>
-					</room-content>
+						<room-content
+							:current-user-id="currentUserId"
+							:room="fRoom"
+							:text-formatting="textFormatting"
+							:link-options="linkOptions"
+							:text-messages="textMessages"
+							:room-actions="roomActions"
+							@room-action-handler="$emit('room-action-handler', $event)"
+						>
+							<template v-for="(i, name) in $scopedSlots" #[name]="data">
+								<slot :name="name" v-bind="data" />
+							</template>
+						</room-content>
+					</div>
+					<transition name="vac-fade-message">
+						<infinite-loading
+							v-if="rooms.length && !loadingRooms"
+							force-use-infinite-wrapper=".vac-room-list"
+							web-component-name="vue-advanced-chat"
+							spinner="spiral"
+							@infinite="loadMoreRooms"
+						>
+							<div slot="spinner">
+								<loader :show="true" :infinite="true" />
+							</div>
+							<div slot="no-results" />
+							<div slot="no-more" />
+						</infinite-loading>
+					</transition>
 				</div>
-				<transition name="vac-fade-message">
-					<infinite-loading
-						v-if="rooms.length && !loadingRooms"
-						force-use-infinite-wrapper=".vac-room-list"
-						web-component-name="vue-advanced-chat"
-						spinner="spiral"
-						@infinite="loadMoreRooms"
-					>
-						<div slot="spinner">
-							<loader :show="true" :infinite="true" />
-						</div>
-						<div slot="no-results" />
-						<div slot="no-more" />
-					</infinite-loading>
-				</transition>
 			</div>
 		</div>
 	</div>
@@ -229,6 +234,14 @@ export default {
 </script>
 
 <style lang="scss">
+.vac-rooms-container-parent {
+	height: 100%;
+	background: var(--chat-sidemenu-bg-color);
+	border-top-left-radius: var(--chat-container-border-radius);
+	border-bottom-left-radius: var(--chat-container-border-radius);
+	box-shadow: 5px 3px 6px rgba(71, 48, 104, 0.06);
+	padding: 10px 0px;
+}
 .vac-rooms-container {
 	display: flex;
 	flex-flow: column;
@@ -236,14 +249,9 @@ export default {
 	min-width: 260px;
 	max-width: 500px;
 	position: relative;
-	background: var(--chat-sidemenu-bg-color);
 	height: 100%;
-	border-top-left-radius: var(--chat-container-border-radius);
-	border-bottom-left-radius: var(--chat-container-border-radius);
-	box-shadow: 5px 3px 6px rgba(71, 48, 104, 0.06);
 	z-index: 1;
 	overflow-y: auto;
-	padding-top: 10px;
 
 	&.vac-rooms-container-full {
 		flex: 0 0 100%;
@@ -273,6 +281,8 @@ export default {
 		background: var(--chat-header-bg-color);
 		width: calc(100% - 20px);
 		margin-bottom: 10px;
+		border-radius: 5px;
+		border: 1px solid var(--chat-header-border-color);
 
 		.vac-room-details-container {
 			flex: 1;
@@ -329,6 +339,7 @@ export default {
 		margin: 0 10px 5px;
 		position: relative;
 		min-height: 65px;
+		border-radius: 5px;
 
 		&:hover {
 			background: var(--chat-sidemenu-room-bg-active) !important;
@@ -342,6 +353,7 @@ export default {
 	.vac-room-selected {
 		color: var(--chat-sidemenu-color-active) !important;
 		background: var(--chat-sidemenu-room-bg-active) !important;
+		border: 1px solid var(--chat-sidemenu-room-bg-active-border);
 	}
 
 	@media only screen and (max-width: 768px) {

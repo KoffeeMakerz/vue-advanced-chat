@@ -57,7 +57,9 @@
 			:menu-actions="menuActions"
 			:room-message="roomMessage"
 			:show-audio="false"
+			:active-tab="activeTab"
 			@fetch-more-rooms="fetchMoreRooms"
+			@change-tab="activeTab = $event"
 			@fetch-messages="fetchMessages"
 			@send-message="sendMessage"
 			@edit-message="editMessage"
@@ -114,6 +116,7 @@ export default {
 
 	data() {
 		return {
+			activeTab: 'chat',
 			roomsPerPage: 15,
 			rooms: [],
 			roomId: '',
