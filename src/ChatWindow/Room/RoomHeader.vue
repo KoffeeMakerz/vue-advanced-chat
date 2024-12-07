@@ -174,6 +174,7 @@ export default {
 .vac-tabs-container {
 	display: flex;
 	flex-direction: row;
+	flex-wrap: wrap;
 	align-items: center;
 	justify-content: space-between;
 	padding: 0px 10px 0px 57px;
