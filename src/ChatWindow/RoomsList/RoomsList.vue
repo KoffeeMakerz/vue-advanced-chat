@@ -223,7 +223,6 @@ export default {
 			this.$emit('fetch-more-rooms')
 			this.loadingMoreRooms = true
 		},
-		roomsWatchHandler(newVal, oldVal) {},
 		extractRooms(rooms) {
 			this.groupRooms = this.roomTypes.map(type => {
 				const group = rooms.filter(room => room.type === type.type)

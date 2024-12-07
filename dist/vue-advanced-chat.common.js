@@ -229,13 +229,6 @@ module.exports = function (obj) {
 
 /***/ }),
 
-/***/ "0aa8":
-/***/ (function(module, exports, __webpack_require__) {
-
-// extracted by mini-css-extract-plugin
-
-/***/ }),
-
 /***/ "0b25":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -519,17 +512,6 @@ $({ target: 'Array', proto: true, arity: 1, forced: FORCED }, {
     return len;
   }
 });
-
-
-/***/ }),
-
-/***/ "15de":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var _node_modules_mini_css_extract_plugin_dist_loader_js_ref_9_oneOf_1_0_node_modules_css_loader_dist_cjs_js_ref_9_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_9_oneOf_1_2_node_modules_sass_loader_dist_cjs_js_ref_9_oneOf_1_3_node_modules_cache_loader_dist_cjs_js_ref_1_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RoomsList_vue_vue_type_style_index_0_id_68aff155_prod_lang_scss__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("0aa8");
-/* harmony import */ var _node_modules_mini_css_extract_plugin_dist_loader_js_ref_9_oneOf_1_0_node_modules_css_loader_dist_cjs_js_ref_9_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_9_oneOf_1_2_node_modules_sass_loader_dist_cjs_js_ref_9_oneOf_1_3_node_modules_cache_loader_dist_cjs_js_ref_1_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RoomsList_vue_vue_type_style_index_0_id_68aff155_prod_lang_scss__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_mini_css_extract_plugin_dist_loader_js_ref_9_oneOf_1_0_node_modules_css_loader_dist_cjs_js_ref_9_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_9_oneOf_1_2_node_modules_sass_loader_dist_cjs_js_ref_9_oneOf_1_3_node_modules_cache_loader_dist_cjs_js_ref_1_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RoomsList_vue_vue_type_style_index_0_id_68aff155_prod_lang_scss__WEBPACK_IMPORTED_MODULE_0__);
-/* unused harmony reexport * */
 
 
 /***/ }),
@@ -2609,6 +2591,17 @@ exportTypedArrayMethod('with', { 'with': function (index, value) {
 
 /***/ }),
 
+/***/ "4feb":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var _node_modules_mini_css_extract_plugin_dist_loader_js_ref_9_oneOf_1_0_node_modules_css_loader_dist_cjs_js_ref_9_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_9_oneOf_1_2_node_modules_sass_loader_dist_cjs_js_ref_9_oneOf_1_3_node_modules_cache_loader_dist_cjs_js_ref_1_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RoomsList_vue_vue_type_style_index_0_id_63fe9a17_prod_lang_scss__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("8ca6");
+/* harmony import */ var _node_modules_mini_css_extract_plugin_dist_loader_js_ref_9_oneOf_1_0_node_modules_css_loader_dist_cjs_js_ref_9_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_9_oneOf_1_2_node_modules_sass_loader_dist_cjs_js_ref_9_oneOf_1_3_node_modules_cache_loader_dist_cjs_js_ref_1_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RoomsList_vue_vue_type_style_index_0_id_63fe9a17_prod_lang_scss__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_mini_css_extract_plugin_dist_loader_js_ref_9_oneOf_1_0_node_modules_css_loader_dist_cjs_js_ref_9_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_9_oneOf_1_2_node_modules_sass_loader_dist_cjs_js_ref_9_oneOf_1_3_node_modules_cache_loader_dist_cjs_js_ref_1_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RoomsList_vue_vue_type_style_index_0_id_63fe9a17_prod_lang_scss__WEBPACK_IMPORTED_MODULE_0__);
+/* unused harmony reexport * */
+
+
+/***/ }),
+
 /***/ "50c4":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3694,6 +3687,13 @@ module.exports = store.inspectSource;
 /***/ }),
 
 /***/ "8c87":
+/***/ (function(module, exports, __webpack_require__) {
+
+// extracted by mini-css-extract-plugin
+
+/***/ }),
+
+/***/ "8ca6":
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
@@ -6659,8 +6659,8 @@ var esnext_iterator_find = __webpack_require__("fffc");
 // EXTERNAL MODULE: ./node_modules/core-js/modules/esnext.iterator.map.js
 var esnext_iterator_map = __webpack_require__("a573");
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"b5f5b36e-vue-loader-template"}!./node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/babel-loader/lib!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/vue-loader/lib??vue-loader-options!./src/ChatWindow/RoomsList/RoomsList.vue?vue&type=template&id=68aff155
-var RoomsListvue_type_template_id_68aff155_render = function render() {
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"b5f5b36e-vue-loader-template"}!./node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/babel-loader/lib!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/vue-loader/lib??vue-loader-options!./src/ChatWindow/RoomsList/RoomsList.vue?vue&type=template&id=63fe9a17
+var RoomsListvue_type_template_id_63fe9a17_render = function render() {
   var _vm = this,
     _c = _vm._self._c;
   return _c('div', {
@@ -6808,9 +6808,9 @@ var RoomsListvue_type_template_id_68aff155_render = function render() {
     })]) : _vm._e()], 1)], 2) : _vm._e()]);
   })], 2)]);
 };
-var RoomsListvue_type_template_id_68aff155_staticRenderFns = [];
+var RoomsListvue_type_template_id_63fe9a17_staticRenderFns = [];
 
-// CONCATENATED MODULE: ./src/ChatWindow/RoomsList/RoomsList.vue?vue&type=template&id=68aff155
+// CONCATENATED MODULE: ./src/ChatWindow/RoomsList/RoomsList.vue?vue&type=template&id=63fe9a17
 
 // EXTERNAL MODULE: ./node_modules/vue-infinite-loading/dist/vue-infinite-loading.js
 var vue_infinite_loading = __webpack_require__("e166");
@@ -7852,6 +7852,13 @@ var RoomContent_component = normalizeComponent(
       },
       immediate: true
     },
+    roomTypes: {
+      handler: function handler(newVal) {
+        this.filteredRooms = this.extractGroups(newVal);
+      },
+      immediate: true,
+      deep: true
+    },
     loadingRooms: function loadingRooms(val) {
       if (val) this.infiniteState = null;
     },
@@ -7922,13 +7929,24 @@ var RoomContent_component = normalizeComponent(
           rooms: group
         });
       });
+    },
+    extractGroups: function extractGroups(groups) {
+      var _this = this;
+      this.groupRooms = groups.map(function (group) {
+        var rooms = _this.rooms.filter(function (room) {
+          return room.type === group.type;
+        });
+        return _objectSpread2(_objectSpread2({}, group), {}, {
+          rooms: rooms
+        });
+      });
     }
   }
 });
 // CONCATENATED MODULE: ./src/ChatWindow/RoomsList/RoomsList.vue?vue&type=script&lang=js
  /* harmony default export */ var RoomsList_RoomsListvue_type_script_lang_js = (RoomsListvue_type_script_lang_js); 
-// EXTERNAL MODULE: ./src/ChatWindow/RoomsList/RoomsList.vue?vue&type=style&index=0&id=68aff155&prod&lang=scss
-var RoomsListvue_type_style_index_0_id_68aff155_prod_lang_scss = __webpack_require__("15de");
+// EXTERNAL MODULE: ./src/ChatWindow/RoomsList/RoomsList.vue?vue&type=style&index=0&id=63fe9a17&prod&lang=scss
+var RoomsListvue_type_style_index_0_id_63fe9a17_prod_lang_scss = __webpack_require__("4feb");
 
 // CONCATENATED MODULE: ./src/ChatWindow/RoomsList/RoomsList.vue
 
@@ -7941,8 +7959,8 @@ var RoomsListvue_type_style_index_0_id_68aff155_prod_lang_scss = __webpack_requi
 
 var RoomsList_component = normalizeComponent(
   RoomsList_RoomsListvue_type_script_lang_js,
-  RoomsListvue_type_template_id_68aff155_render,
-  RoomsListvue_type_template_id_68aff155_staticRenderFns,
+  RoomsListvue_type_template_id_63fe9a17_render,
+  RoomsListvue_type_template_id_63fe9a17_staticRenderFns,
   false,
   null,
   null,
