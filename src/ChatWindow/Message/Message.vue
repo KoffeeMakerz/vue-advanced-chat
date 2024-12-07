@@ -479,6 +479,7 @@ export default {
 		padding: 8px 4px;
 		color: var(--chat-message-color-system);
 		background: var(--chat-message-bg-color-system);
+		font-weight: 500;
 	}
 
 	.vac-line-new {

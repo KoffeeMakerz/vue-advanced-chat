@@ -46,20 +46,17 @@
 				</div>
 
 				<div
-					v-if="
-						!loadingRooms && !rooms.length && expandedGroups.includes(group.id)
-					"
-					class="vac-rooms-empty"
-				>
-					<slot name="rooms-empty">
-						{{ textMessages.ROOMS_EMPTY }}
-					</slot>
-				</div>
-
-				<div
 					v-if="!loadingRooms && expandedGroups.includes(group.id)"
 					class="vac-room-list"
 				>
+					<div
+						v-if="!loadingRooms && !groupRooms[groupIndex].rooms.length"
+						class="vac-rooms-empty"
+					>
+						<slot name="rooms-empty">
+							{{ textMessages.ROOMS_EMPTY }}
+						</slot>
+					</div>
 					<div
 						v-for="fRoom in groupRooms[groupIndex].rooms"
 						:id="fRoom.roomId"
@@ -242,8 +239,7 @@ export default {
 	display: flex;
 	flex-flow: column;
 	flex: 0 0 25%;
-	min-width: 260px;
-	max-width: 500px;
+	width: 500px;
 	position: relative;
 	height: 100%;
 	z-index: 1;
@@ -268,14 +264,16 @@ export default {
 	}
 
 	.vac-room-header-container {
-		position: relative;
+		position: sticky;
+		top: 0;
+		z-index: 10;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 		height: 44px;
 		margin: 0px 15px 10px;
 		background: var(--chat-header-bg-color);
-		width: calc(100% - 32px);
+		width: calc(100% - 30px);
 		margin-bottom: 10px;
 		border-radius: 5px;
 		border: 1px solid var(--chat-header-border-color);

@@ -111,6 +111,16 @@ export default {
 		tabs: { type: Object, required: true }
 	},
 
+	watch: {
+		room: {
+			handler() {
+				this.roomNameEditing = false
+				this.temporaryRoomName = this.room.roomName
+			},
+			deep: true
+		}
+	},
+
 	data() {
 		return {
 			menuOpened: false,
@@ -167,7 +177,7 @@ export default {
 	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
-	padding: 0px 16px 0px 57px;
+	padding: 0px 10px 0px 57px;
 	gap: 20%;
 	background-color: var(--chat-tabs-bg-color);
 	margin-top: 10px;
