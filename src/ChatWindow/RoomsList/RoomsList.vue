@@ -239,7 +239,7 @@ export default {
 	display: flex;
 	flex-flow: column;
 	flex: 0 0 25%;
-	width: 500px;
+	width: 350px;
 	position: relative;
 	height: 100%;
 	z-index: 1;
