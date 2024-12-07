@@ -158,6 +158,13 @@ export default {
 			},
 			immediate: true
 		},
+		roomTypes: {
+			handler(newVal) {
+				this.filteredRooms = this.extractGroups(newVal)
+			},
+			immediate: true,
+			deep: true
+		},
 		loadingRooms(val) {
 			if (val) this.infiniteState = null
 		},
@@ -216,10 +223,17 @@ export default {
 			this.$emit('fetch-more-rooms')
 			this.loadingMoreRooms = true
 		},
+		roomsWatchHandler(newVal, oldVal) {},
 		extractRooms(rooms) {
 			this.groupRooms = this.roomTypes.map(type => {
 				const group = rooms.filter(room => room.type === type.type)
 				return { ...type, rooms: group }
+			})
+		},
+		extractGroups(groups) {
+			this.groupRooms = groups.map(group => {
+				const rooms = this.rooms.filter(room => room.type === group.type)
+				return { ...group, rooms }
 			})
 		}
 	}
