@@ -333,7 +333,7 @@ export default {
 		showSender() {
 			return (
 				this.showDate ||
-				this.index == 0 ||
+				this.index === 0 ||
 				this.message.senderId !== this.messages[this.index - 1].senderId
 			)
 		},
