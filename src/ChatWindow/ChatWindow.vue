@@ -11,7 +11,6 @@
 				:room="room"
 				:room-actions="roomActions"
 				:text-messages="t"
-				:show-add-room="showAddRoom"
 				:show-rooms-list="showRoomsList"
 				:text-formatting="textFormatting"
 				:link-options="linkOptions"
@@ -127,7 +126,6 @@ export default {
 				{ name: 'deleteMessage', title: 'Delete Message', onlyMe: true }
 			]
 		},
-		showAddRoom: { type: Boolean, default: true },
 		showSendIcon: { type: Boolean, default: true },
 		showFiles: { type: Boolean, default: true },
 		showAudio: { type: Boolean, default: true },

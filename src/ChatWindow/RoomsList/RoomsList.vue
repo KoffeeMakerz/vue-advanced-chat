@@ -108,8 +108,6 @@ import InfiniteLoading from 'vue-infinite-loading'
 
 import Loader from '../../components/Loader'
 
-import RoomsSearch from './RoomsSearch'
-
 import RoomContent from './RoomContent'
 
 import SvgIcon from '../../components/SvgIcon'
@@ -119,7 +117,6 @@ export default {
 	components: {
 		InfiniteLoading,
 		Loader,
-		RoomsSearch,
 		RoomContent,
 		SvgIcon
 	},
@@ -128,7 +125,6 @@ export default {
 		currentUserId: { type: [String, Number], required: true },
 		textMessages: { type: Object, required: true },
 		showRoomsList: { type: Boolean, required: true },
-		showAddRoom: { type: Boolean, required: true },
 		textFormatting: { type: Boolean, required: true },
 		linkOptions: { type: Object, required: true },
 		isMobile: { type: Boolean, required: true },
