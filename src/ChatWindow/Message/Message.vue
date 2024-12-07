@@ -156,12 +156,23 @@
 
 						<div v-else>
 							<div class="vac-non-preview-container">
-								<div class="vac-svg-button" @click.stop="openFile('download')">
+								<div
+									class="vac-svg-button"
+									:class="{
+										'vac-download-button-me': message.senderId === currentUserId
+									}"
+									@click.stop="openFile('download')"
+								>
 									<slot name="document-icon">
 										<svg-icon name="document" />
 									</slot>
 								</div>
-								<div class="doc-svg-icon">
+								<div
+									class="doc-svg-icon"
+									:class="{
+										'vac-file-icon-me': message.senderId === currentUserId
+									}"
+								>
 									<svg-icon class="doc-svg-button" name="file" />
 								</div>
 								<div class="text-container">
@@ -601,6 +612,18 @@ export default {
 	.vac-non-preview-container {
 		width: 90px;
 		font-size: 12px;
+
+		.vac-download-button-me {
+			#vac-icon-document {
+				fill: var(--chat-message-color-me) !important;
+			}
+		}
+
+		.vac-file-icon-me {
+			#vac-icon-file {
+				fill: var(--chat-message-color-me) !important;
+			}
+		}
 	}
 
 	.vac-message-image {
