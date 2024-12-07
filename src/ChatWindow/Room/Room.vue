@@ -1214,17 +1214,17 @@ export default {
 			display: flex;
 			justify-content: center;
 			align-items: center;
-			padding: 4px 12px;
+			padding: 2px 14px;
 			border-radius: 13px;
 			border: 1px solid #6c5a86;
 			background-color: rgba(108, 90, 134, 0.06);
 			color: #6c5a86;
-			font-size: 15px;
+			font-size: 13px;
 
 			&:hover {
 				background-color: rgba(108, 90, 134, 0.1);
-				padding: 5px 13px;
-				font-size: 16px;
+				padding: 3px 15px;
+				font-size: 13px;
 			}
 		}
 	}

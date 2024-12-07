@@ -74,7 +74,6 @@
 				>
 					Pinned
 				</div>
-				<div class="vac-tabs-slider"></div>
 			</div>
 			<slot name="message-search"></slot>
 		</div>
@@ -194,15 +193,6 @@ export default {
 		height: 44px;
 	}
 
-	.vac-tabs-slider {
-		position: absolute;
-		bottom: 0;
-		left: 0;
-		height: 3px;
-		width: calc((100% - 40%) / 3);
-		background-color: #473068;
-		transition: transform 0.3s ease;
-	}
 	.vac-tab {
 		flex: 1;
 		display: flex;
@@ -211,11 +201,16 @@ export default {
 		align-items: center;
 		color: #473068;
 		cursor: pointer;
-		transition: color 0.3s ease;
+		transition-duration: 300ms;
+		transition-property: border-bottom;
+		border-bottom: unset;
 	}
 
 	.vac-tab.active {
 		font-weight: 600;
+		transition-duration: 300ms;
+		transition-property: border-bottom;
+		border-bottom: 3px solid #473068;
 	}
 
 	.vac-tab:not(.active) {
@@ -224,18 +219,6 @@ export default {
 
 	.vac-tab:hover {
 		font-weight: 600;
-	}
-
-	.vac-tabs .vac-tab:nth-child(1).active ~ .vac-tabs-slider {
-		transform: translateX(0px);
-	}
-
-	.vac-tabs .vac-tab:nth-child(2).active ~ .vac-tabs-slider {
-		transform: translateX(200%);
-	}
-
-	.vac-tabs .vac-tab:nth-child(3).active ~ .vac-tabs-slider {
-		transform: translateX(400%);
 	}
 
 	.search-message-field {
