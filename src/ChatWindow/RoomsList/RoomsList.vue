@@ -240,7 +240,7 @@ export default {
 	border-top-left-radius: var(--chat-container-border-radius);
 	border-bottom-left-radius: var(--chat-container-border-radius);
 	box-shadow: 5px 3px 6px rgba(71, 48, 104, 0.06);
-	padding: 10px 0px;
+	padding: 15px 0px;
 }
 .vac-rooms-container {
 	display: flex;
@@ -277,9 +277,9 @@ export default {
 		align-items: center;
 		justify-content: space-between;
 		height: 44px;
-		margin: 0px 10px 10px;
+		margin: 0px 15px 10px;
 		background: var(--chat-header-bg-color);
-		width: calc(100% - 20px);
+		width: calc(100% - 32px);
 		margin-bottom: 10px;
 		border-radius: 5px;
 		border: 1px solid var(--chat-header-border-color);
@@ -336,9 +336,10 @@ export default {
 		display: flex;
 		flex: 1 1 100%;
 		margin-bottom: 5px;
-		margin: 0 10px 5px;
+		margin: 0 15px 5px;
 		position: relative;
 		min-height: 65px;
+		width: calc(100% - 30px);
 		border-radius: 5px;
 
 		&:hover {

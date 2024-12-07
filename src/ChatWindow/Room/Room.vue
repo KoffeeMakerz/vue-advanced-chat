@@ -1054,7 +1054,7 @@ export default {
 	display: flex;
 	flex-flow: column;
 	background-color: #ffffff;
-	padding: 10px 10px 10px 15px;
+	padding: 15px 15px 15px 0px;
 
 	.vac-container-center {
 		height: 100%;
@@ -1081,6 +1081,9 @@ export default {
 	.vac-tab-chats-content {
 		all: inherit;
 		padding: unset;
+		border-bottom-left-radius: var(--chat-container-border-radius);
+		border-bottom-right-radius: var(--chat-container-border-radius);
+		border: 1px solid rgba(71, 48, 104, 0.09);
 	}
 
 	.vac-container-scroll {
@@ -1153,6 +1156,8 @@ export default {
 		background: var(--chat-footer-bg-color);
 		align-items: flex-end;
 		border-radius: 7px;
+		box-shadow: -2px 2px 4px rgba(68, 45, 101, 0.11),
+			2px 2px 4px rgba(68, 45, 101, 0.11);
 	}
 
 	.vac-textarea {
@@ -1205,6 +1210,7 @@ export default {
 		height: 44px;
 
 		.vac-send-button {
+			cursor: pointer;
 			display: flex;
 			justify-content: center;
 			align-items: center;
@@ -1214,6 +1220,12 @@ export default {
 			background-color: rgba(108, 90, 134, 0.06);
 			color: #6c5a86;
 			font-size: 15px;
+
+			&:hover {
+				background-color: rgba(108, 90, 134, 0.1);
+				padding: 5px 13px;
+				font-size: 16px;
+			}
 		}
 	}
 
@@ -1378,11 +1390,15 @@ export default {
 		}
 	}
 
-	.vac-send-disabled,
-	.vac-send-disabled svg {
+	.vac-send-disabled {
+		opacity: 0.5;
 		cursor: none !important;
 		pointer-events: none !important;
 		transform: none !important;
+
+		&:hover {
+			all: unset;
+		}
 	}
 
 	.vac-messages-hidden {

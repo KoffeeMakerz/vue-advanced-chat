@@ -10,12 +10,16 @@
 
 		<div
 			v-if="showSender"
-			:class="{ 'vac-offset-current': message.senderId === currentUserId }"
+			:class="{
+				'vac-offset-current': message.senderId === currentUserId,
+				'vac-offset-center': !message.senderId
+			}"
 		>
 			<div
 				class="vac-sender-container"
 				:class="{
-					'vac-sender-container-offset': message.senderId === currentUserId
+					'vac-sender-container-offset': message.senderId === currentUserId,
+					'vac-sender-container-center': !message.senderId
 				}"
 			>
 				<div
@@ -39,7 +43,10 @@
 		<div
 			v-else
 			class="vac-message-box"
-			:class="{ 'vac-offset-current': message.senderId === currentUserId }"
+			:class="{
+				'vac-offset-current': message.senderId === currentUserId,
+				'vac-offset-center': !message.senderId
+			}"
 		>
 			<slot name="message" v-bind="{ message }">
 				<div class="vac-message-container">
@@ -48,7 +55,8 @@
 						:class="{
 							'vac-message-highlight': isMessageHover,
 							'vac-message-current': message.senderId === currentUserId,
-							'vac-message-deleted': message.deleted
+							'vac-message-deleted': message.deleted,
+							'vac-message-center': !message.senderId
 						}"
 						@mouseover="onHoverMessage"
 						@mouseleave="onLeaveMessage"
@@ -178,7 +186,8 @@
 						<div
 							class="vac-text-timestamp"
 							:class="{
-								'vac-text-timestamp-me': message.senderId === currentUserId
+								'vac-text-timestamp-me': message.senderId === currentUserId,
+								'vac-message-timestamp-deleted': message.deleted
 							}"
 						>
 							<div
@@ -525,6 +534,12 @@ export default {
 		justify-content: flex-end;
 	}
 
+	.vac-offset-center {
+		margin-left: 0px;
+		width: 100%;
+		justify-content: center;
+	}
+
 	.vac-message-card {
 		background: var(--chat-message-bg-color);
 		color: var(--chat-message-color);
@@ -557,6 +572,11 @@ export default {
 		font-size: 13px !important;
 		font-style: italic !important;
 		background: var(--chat-message-bg-color-deleted) !important;
+	}
+
+	.vac-message-center {
+		background: unset !important;
+		border: 1px solid var(--chat-message-bg-color-me) !important;
 	}
 
 	.vac-icon-deleted {
@@ -610,11 +630,15 @@ export default {
 	.vac-text-timestamp {
 		color: var(--chat-message-color-timestamp);
 		text-align: right;
+		font-size: 10px;
 	}
 
 	.vac-text-timestamp-me {
 		color: var(--chat-message-color-timestamp-me);
-		text-align: right;
+	}
+
+	.vac-message-timestamp-deleted {
+		color: var(--chat-message-color-deleted);
 	}
 
 	.vac-progress-time {
@@ -670,10 +694,13 @@ export default {
 		align-items: center;
 		justify-content: flex-start;
 		gap: 10px;
-		padding: 10px 0 2px 10px;
+		padding: 10px 10px 2px 10px;
 	}
 	.vac-sender-container-offset {
 		justify-content: flex-end;
+	}
+	.vac-sender-container-center {
+		justify-content: center;
 	}
 
 	@media only screen and (max-width: 768px) {

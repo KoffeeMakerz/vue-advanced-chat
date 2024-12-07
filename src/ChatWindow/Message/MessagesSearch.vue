@@ -29,7 +29,7 @@ export default {
 	position: sticky;
 	display: flex;
 	align-items: center;
-	height: 54px;
+	height: 44px;
 	padding: 0 0 0 15px;
 	border-bottom: var(--chat-border-style);
 

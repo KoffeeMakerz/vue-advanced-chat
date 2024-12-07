@@ -194,8 +194,8 @@ export default {
 	display: flex;
 	flex: 1;
 	align-items: center;
-	width: 100%;
-	margin-left: 12px;
+	width: calc(100% - 24px);
+	margin: 0px 12px;
 
 	.vac-name-container {
 		flex: 1;
@@ -224,13 +224,10 @@ export default {
 		flex: 1;
 		color: var(--chat-room-color-username);
 		font-weight: 600;
-		max-width: 230px;
 	}
 
 	.vac-text-date {
 		margin-left: 5px;
-		font-size: 11px;
-		color: var(--chat-room-color-timestamp);
 	}
 
 	.vac-text-last {
@@ -238,7 +235,8 @@ export default {
 		align-items: center;
 		font-size: 12px;
 		line-height: 19px;
-		color: var(--chat-room-color-message);
+		color: var(--chat-room-color-last-message);
+		font-weight: 500;
 	}
 
 	.vac-message-new {
@@ -272,6 +270,7 @@ export default {
 		background-color: var(--chat-room-bg-color-badge);
 		color: var(--chat-room-color-badge);
 		margin-left: 5px;
+		font-weight: 600;
 	}
 
 	.vac-list-room-options {

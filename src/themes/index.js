@@ -1,9 +1,9 @@
 export const defaultThemeStyles = {
 	light: {
 		general: {
-			color: '#442D65',
+			color: '#473068',
 			backgroundInput: '#fff',
-			colorPlaceholder: '#9ca6af',
+			colorPlaceholder: 'rgba(71, 48, 104, 0.6)',
 			colorCaret: '#1976d2',
 			colorSpinner: '#333',
 			borderStyle: '1px solid #F8F9FA',
@@ -106,6 +106,7 @@ export const defaultThemeStyles = {
 
 		room: {
 			colorUsername: '#442D65',
+			colorLastMessage: 'rgba(68, 45, 101, 0.68)',
 			colorMessage: '#67717a',
 			colorTimestamp: '#a2aeb8',
 			colorStateOnline: '#4caf50',
@@ -152,9 +153,9 @@ export const defaultThemeStyles = {
 	},
 	dark: {
 		general: {
-			color: '#fff',
+			color: '#473068',
 			backgroundInput: '#202223',
-			colorPlaceholder: '#596269',
+			colorPlaceholder: 'rgba(71, 48, 104, 0.6)',
 			colorCaret: '#fff',
 			colorSpinner: '#fff',
 			borderStyle: 'none',
@@ -253,6 +254,7 @@ export const defaultThemeStyles = {
 
 		room: {
 			colorUsername: '#fff',
+			colorLastMessage: 'rgba(68, 45, 101, 0.68)',
 			colorMessage: '#6c7278',
 			colorTimestamp: '#6c7278',
 			colorStateOnline: '#4caf50',
@@ -414,6 +416,7 @@ export const cssThemeVars = ({
 
 		// room
 		'--chat-room-color-username': room.colorUsername,
+		'--chat-room-color-last-message': room.colorLastMessage,
 		'--chat-room-color-message': room.colorMessage,
 		'--chat-room-color-timestamp': room.colorTimestamp,
 		'--chat-room-color-online': room.colorStateOnline,

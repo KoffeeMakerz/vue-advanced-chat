@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div class="vac-room-header vac-app-border-b">
+		<div class="vac-room-header">
 			<slot name="room-header" v-bind="{ room, typingUsers, userStatus }">
 				<div class="vac-room-wrapper">
 					<div
@@ -170,13 +170,18 @@ export default {
 	padding: 0px 16px 0px 57px;
 	gap: 20%;
 	background-color: var(--chat-tabs-bg-color);
+	margin-top: 10px;
+	border: 1px solid rgba(71, 48, 104, 0.09);
+	border-bottom: 2px solid rgba(71, 48, 104, 0.09);
+	border-top-right-radius: var(--chat-container-border-radius);
+	border-top-left-radius: var(--chat-container-border-radius);
 
 	.vac-tabs {
 		flex: 1;
 		display: flex;
 		position: relative;
 		gap: 20%;
-		height: 55px;
+		height: 44px;
 	}
 
 	.vac-tabs-slider {
@@ -241,11 +246,6 @@ export default {
 		margin-left: 5px;
 	}
 }
-.vac-room-header-container {
-	position: absolute;
-	z-index: 10;
-	width: 100%;
-}
 .vac-room-header {
 	display: flex;
 	align-items: center;
@@ -253,8 +253,8 @@ export default {
 	width: 100%;
 	margin-right: 1px;
 	background: var(--chat-header-bg-color);
-	border-top-right-radius: var(--chat-container-border-radius);
-	box-shadow: 0px 3px 6px rgba(71, 48, 104, 0.06);
+	border-radius: var(--chat-container-border-radius);
+	border: 1px solid rgba(71, 48, 104, 0.09);
 
 	.vac-room-wrapper {
 		display: flex;
