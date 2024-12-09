@@ -140,9 +140,18 @@ export default {
 			)
 		},
 		filteredMessageActions() {
-			return this.message.senderId === this.currentUserId
-				? this.messageActions
-				: this.messageActions.filter(message => !message.onlyMe)
+			const options =
+				this.message.senderId === this.currentUserId
+					? this.messageActions
+					: this.messageActions.filter(message => !message.onlyMe)
+
+			return options.filter(
+				action =>
+					!action.disappearAfter ||
+					!this.message.createdAt ||
+					Math.floor(Date.now() - new Date(this.message.createdAt).getTime()) <
+						action.disappearAfter
+			)
 		}
 	},
 
