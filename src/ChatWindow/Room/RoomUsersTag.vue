@@ -3,7 +3,6 @@
 		<div
 			v-if="filteredUsersTag.length"
 			class="vac-tags-container vac-app-box-shadow"
-			:style="{ bottom: `${$parent.$refs.roomFooter.clientHeight}px` }"
 		>
 			<div
 				v-for="user in filteredUsersTag"
@@ -39,6 +38,9 @@ export default {
 <style lang="scss">
 .vac-tags-container {
 	position: absolute;
+	bottom: 64px;
+	z-index: 40;
+	max-height: 40vh;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -49,8 +51,7 @@ export default {
 	.vac-tags-box {
 		display: flex;
 		width: 100%;
-		height: 54px;
-		overflow: hidden;
+		min-height: 54px;
 		cursor: pointer;
 		background: var(--chat-footer-bg-color);
 		overflow-y: auto !important;
