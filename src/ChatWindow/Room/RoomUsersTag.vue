@@ -3,6 +3,9 @@
 		<div
 			v-if="filteredUsersTag.length"
 			class="vac-tags-container vac-app-box-shadow"
+			:style="{
+				maxHeight: `calc(${height} - 190px)`
+			}"
 		>
 			<div
 				v-for="user in filteredUsersTag"
@@ -30,6 +33,7 @@ export default {
 	name: 'RoomUsersTag',
 
 	props: {
+		height: { type: String, required: true },
 		filteredUsersTag: { type: Array, required: true }
 	}
 }
@@ -40,7 +44,6 @@ export default {
 	position: absolute;
 	bottom: 64px;
 	z-index: 40;
-	max-height: 40vh;
 	display: flex;
 	flex-direction: column;
 	align-items: center;

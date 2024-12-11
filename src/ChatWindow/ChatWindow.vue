@@ -29,6 +29,7 @@
 			<room
 				:current-user-id="currentUserId"
 				:rooms="rooms"
+				:height="height"
 				:room-id="room.roomId || ''"
 				:load-first-room="loadFirstRoom"
 				:messages="messages"

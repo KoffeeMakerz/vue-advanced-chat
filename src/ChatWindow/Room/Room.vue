@@ -183,6 +183,7 @@
 
 				<room-users-tag
 					:filtered-users-tag="filteredUsersTag"
+					:height="height"
 					style="
 						background-color: white !important;
 						overflow-y: auto !important;
@@ -363,6 +364,7 @@ export default {
 	},
 
 	props: {
+		height: { type: String, required: true },
 		currentUserId: { type: [String, Number], required: true },
 		textMessages: { type: Object, required: true },
 		singleRoom: { type: Boolean, required: true },
