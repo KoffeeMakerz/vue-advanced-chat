@@ -172,6 +172,8 @@ export default {
 
 <style lang="scss">
 .vac-tabs-container {
+	position: relative;
+	z-index: 1;
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
@@ -182,9 +184,10 @@ export default {
 	background-color: var(--chat-tabs-bg-color);
 	margin-top: 10px;
 	border: 1px solid rgba(71, 48, 104, 0.09);
-	border-bottom: 2px solid rgba(71, 48, 104, 0.09);
+	border-bottom: none;
 	border-top-right-radius: var(--chat-container-border-radius);
 	border-top-left-radius: var(--chat-container-border-radius);
+	box-shadow: -2px 4px 5px rgba(68, 45, 101, 0.11);
 
 	.vac-tabs {
 		flex: 1;
