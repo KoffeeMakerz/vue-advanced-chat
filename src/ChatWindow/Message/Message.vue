@@ -221,6 +221,11 @@
 									/>
 								</slot>
 							</span>
+							<span v-else>
+								<slot name="timer-icon">
+									<svg-icon name="timer" class="vac-icon-timer" />
+								</slot>
+							</span>
 						</div>
 
 						<message-actions
