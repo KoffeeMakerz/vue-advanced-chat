@@ -221,7 +221,7 @@
 									/>
 								</slot>
 							</span>
-							<span v-if="isTimerVisible || message.timer">
+							<span v-if="isTimerVisible">
 								<slot name="timer-icon">
 									<svg-icon name="timer" class="vac-icon-timer" />
 								</slot>
@@ -371,7 +371,7 @@ export default {
 			return (
 				this.message.senderId === this.currentUserId &&
 				!this.message.deleted &&
-				(!this.message.saved && !this.message.distributed && !this.message.seen)
+				(!this.message.saved || !this.message.distributed)
 			)
 		}
 	},
