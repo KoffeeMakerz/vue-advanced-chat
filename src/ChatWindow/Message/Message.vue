@@ -221,7 +221,7 @@
 									/>
 								</slot>
 							</span>
-							<span v-if="isTimerVisible">
+							<span v-if="isTimerVisible || message.timer">
 								<slot name="timer-icon">
 									<svg-icon name="timer" class="vac-icon-timer" />
 								</slot>
