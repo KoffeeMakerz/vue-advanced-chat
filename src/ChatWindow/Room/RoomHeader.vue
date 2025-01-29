@@ -22,11 +22,11 @@
 								<div v-else class="vac-room-name vac-text-ellipsis">
 									<input
 										v-if="roomNameEditing"
+										v-model="temporaryRoomName"
 										type="text"
 										placeholder="Room name"
 										autocomplete="off"
 										class="vac-room-name-input"
-										v-model="temporaryRoomName"
 										@keypress="$event.key === 'Enter' && changeRoomName()"
 										@blur="changeRoomName"
 									/>
@@ -47,7 +47,7 @@
 							</div>
 						</slot>
 					</div>
-					<slot v-if="room.roomId" name="room-members"></slot>
+					<slot v-if="room.roomId" name="room-members" />
 				</div>
 			</slot>
 		</div>
@@ -75,7 +75,7 @@
 					Pinned
 				</div>
 			</div>
-			<slot name="message-search"></slot>
+			<slot name="message-search" />
 		</div>
 	</div>
 </template>
@@ -83,15 +83,10 @@
 <script>
 import vClickOutside from 'v-click-outside'
 
-import SvgIcon from '../../components/SvgIcon'
-
 import typingText from '../../utils/typing-text'
 
 export default {
 	name: 'RoomHeader',
-	components: {
-		SvgIcon
-	},
 
 	directives: {
 		clickOutside: vClickOutside.directive
@@ -100,29 +95,14 @@ export default {
 	props: {
 		currentUserId: { type: [String, Number], required: true },
 		textMessages: { type: Object, required: true },
-		singleRoom: { type: Boolean, required: true },
-		showRoomsList: { type: Boolean, required: true },
-		isMobile: { type: Boolean, required: true },
 		roomInfo: { type: Function, default: null },
-		menuActions: { type: Array, required: true },
 		room: { type: Object, required: true },
 		activeTab: { type: String, default: 'chat' },
 		tabs: { type: Object, required: true }
 	},
 
-	watch: {
-		room: {
-			handler() {
-				this.roomNameEditing = false
-				this.temporaryRoomName = this.room.roomName
-			},
-			deep: true
-		}
-	},
-
 	data() {
 		return {
-			menuOpened: false,
 			temporaryRoomName: this.room.roomName,
 			roomNameEditing: false
 		}
@@ -151,14 +131,17 @@ export default {
 		}
 	},
 
+	watch: {
+		room: {
+			handler() {
+				this.roomNameEditing = false
+				this.temporaryRoomName = this.room.roomName
+			},
+			deep: true
+		}
+	},
+
 	methods: {
-		menuActionHandler(action) {
-			this.closeMenu()
-			this.$emit('menu-action-handler', action)
-		},
-		closeMenu() {
-			this.menuOpened = false
-		},
 		changeRoomName() {
 			this.roomNameEditing = false
 			if (this.temporaryRoomName !== this.room.roomName) {

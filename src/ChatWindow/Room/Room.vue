@@ -14,11 +14,7 @@
 			:current-user-id="currentUserId"
 			:active-tab="activeTab"
 			:text-messages="textMessages"
-			:single-room="singleRoom"
-			:show-rooms-list="showRoomsList"
-			:is-mobile="isMobile"
 			:room-info="roomInfo"
-			:menu-actions="menuActions"
 			:room="room"
 			:tabs="tabs"
 			@change-tab="$emit('change-tab', $event)"
@@ -34,12 +30,12 @@
 
 		<div v-if="activeTab === tabs.FILES" class="vac-tab-chats-content">
 			<div ref="scrollContainer" class="vac-container-scroll">
-				<slot name="files-tab-content"></slot>
+				<slot name="files-tab-content" />
 			</div>
 		</div>
 		<div v-else-if="activeTab === tabs.PINNED" class="vac-tab-chats-content">
 			<div ref="scrollContainer" class="vac-container-scroll">
-				<slot name="pinned-tab-content"></slot>
+				<slot name="pinned-tab-content" />
 			</div>
 		</div>
 		<div v-else-if="activeTab === tabs.CHAT" class="vac-tab-chats-content">
@@ -376,7 +372,6 @@ export default {
 		messages: { type: Array, required: true },
 		roomMessage: { type: String, default: null },
 		messagesLoaded: { type: Boolean, required: true },
-		menuActions: { type: Array, required: true },
 		messageActions: { type: Array, required: true },
 		showSendIcon: { type: Boolean, required: true },
 		showFiles: { type: Boolean, required: true },

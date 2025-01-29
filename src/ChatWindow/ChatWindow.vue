@@ -9,7 +9,6 @@
 				:loading-rooms="loadingRooms"
 				:rooms-loaded="roomsLoaded"
 				:room="room"
-				:room-actions="roomActions"
 				:text-messages="t"
 				:show-rooms-list="showRoomsList"
 				:text-formatting="textFormatting"
@@ -35,7 +34,6 @@
 				:messages="messages"
 				:room-message="roomMessage"
 				:messages-loaded="messagesLoaded"
-				:menu-actions="menuActions"
 				:message-actions="messageActions"
 				:show-send-icon="showSendIcon"
 				:show-files="showFiles"
@@ -117,8 +115,6 @@ export default {
 		loadFirstRoom: { type: Boolean, default: true },
 		messages: { type: Array, default: () => [] },
 		messagesLoaded: { type: Boolean, default: false },
-		roomActions: { type: Array, default: () => [] },
-		menuActions: { type: Array, default: () => [] },
 		messageActions: {
 			type: Array,
 			default: () => [

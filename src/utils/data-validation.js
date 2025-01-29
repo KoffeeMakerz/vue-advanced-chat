@@ -9,9 +9,9 @@ export function roomsValidation(obj) {
 		return props.every(prop => {
 			let validType = false
 
-			if (prop.type[0] === 'array' && Array.isArray(obj[prop.key])) {
+			if (prop.type.includes('array') && Array.isArray(obj[prop.key])) {
 				validType = true
-			} else if (prop.type.find(t => t === typeof obj[prop.key])) {
+			} else if (prop.type.includes(typeof obj[prop.key])) {
 				validType = true
 			}
 
