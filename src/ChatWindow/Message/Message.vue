@@ -229,7 +229,7 @@
 						</div>
 
 						<message-actions
-							v-if="!isUploading && showMessageOption"
+							v-if="!isUploading && !message.sending && showMessageOption"
 							:current-user-id="currentUserId"
 							:message="message"
 							:message-actions="messageActions"
