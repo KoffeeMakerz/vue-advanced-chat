@@ -105,14 +105,7 @@ export default {
 		room: { type: Object, required: true },
 		textFormatting: { type: Boolean, required: true },
 		linkOptions: { type: Object, required: true },
-		textMessages: { type: Object, required: true },
-		roomActions: { type: Array, required: true }
-	},
-
-	data() {
-		return {
-			roomMenuOpened: null
-		}
+		textMessages: { type: Object, required: true }
 	},
 
 	computed: {
@@ -174,16 +167,6 @@ export default {
 		},
 		isAudio() {
 			return isAudioFile(this.room.lastMessage.file)
-		}
-	},
-
-	methods: {
-		roomActionHandler(action) {
-			this.closeRoomMenu()
-			this.$emit('room-action-handler', { action, roomId: this.room.roomId })
-		},
-		closeRoomMenu() {
-			this.roomMenuOpened = null
 		}
 	}
 }

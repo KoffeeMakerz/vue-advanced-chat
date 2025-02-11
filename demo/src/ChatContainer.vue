@@ -53,8 +53,6 @@
 			:messages="messages"
 			:messages-loaded="messagesLoaded"
 			:rooms-loaded="roomsLoaded"
-			:room-actions="roomActions"
-			:menu-actions="menuActions"
 			:room-message="roomMessage"
 			:show-audio="false"
 			:active-tab="activeTab"
@@ -145,16 +143,6 @@ export default {
 			removeRoomId: null,
 			removeUserId: '',
 			removeUsers: [],
-			roomActions: [
-				{ name: 'inviteUser', title: 'Invite User' },
-				{ name: 'removeUser', title: 'Remove User' },
-				{ name: 'deleteRoom', title: 'Delete Room' }
-			],
-			menuActions: [
-				{ name: 'inviteUser', title: 'Invite User' },
-				{ name: 'removeUser', title: 'Remove User' },
-				{ name: 'deleteRoom', title: 'Delete Room' }
-			],
 			styles: { container: { borderRadius: '4px' } }
 			// ,dbRequestCount: 0
 		}

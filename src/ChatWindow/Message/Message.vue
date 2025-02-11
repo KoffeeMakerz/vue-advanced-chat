@@ -209,7 +209,12 @@
 									<svg-icon name="pencil" />
 								</slot>
 							</div>
-							<span>{{ message.timestamp }}</span>
+							<span v-if="!message.sending">{{ message.timestamp }}</span>
+							<span v-else>
+								<slot name="clock-icon">
+									<svg-icon name="clock" class="vac-icon-clock" />
+								</slot>
+							</span>
 							<span v-if="isCheckmarkVisible">
 								<slot name="checkmark-icon" v-bind="{ message }">
 									<svg-icon
@@ -224,7 +229,7 @@
 						</div>
 
 						<message-actions
-							v-if="!isUploading && showMessageOption"
+							v-if="!isUploading && !message.sending && showMessageOption"
 							:current-user-id="currentUserId"
 							:message="message"
 							:message-actions="messageActions"
@@ -706,6 +711,13 @@ export default {
 	}
 
 	.vac-icon-check {
+		height: 14px;
+		width: 14px;
+		vertical-align: middle;
+		margin: -3px -3px 0 3px;
+	}
+
+	.vac-icon-clock {
 		height: 14px;
 		width: 14px;
 		vertical-align: middle;
