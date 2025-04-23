@@ -6,7 +6,7 @@
 				slot-scope="{ events: { click: clickEvent } }"
 				class="vac-svg-button"
 				:class="{ 'vac-emoji-reaction': emojiReaction }"
-				style="margin-right: -3px;"
+				style="margin-right: -3px"
 				@click.stop="clickEvent"
 				@click="openEmoji"
 			>
@@ -26,12 +26,15 @@
 						:style="{
 							height: `${emojiPickerHeight}px`,
 							top: positionTop ? emojiPickerHeight : `${emojiPickerTop}px`,
-							right: emojiPickerRight,
 							display: emojiPickerTop || !emojiReaction ? 'initial' : 'none'
 						}"
 					>
 						<div class="vac-emoji-picker__search">
-							<input v-model="search" type="text" />
+							<input
+								v-model="search"
+								type="text"
+								:placeholder="textMessages.SEARCH_EMOJI"
+							/>
 						</div>
 						<div>
 							<div v-for="(emojiGroup, category) in emojis" :key="category">
@@ -73,15 +76,14 @@ export default {
 		emojiReaction: { type: Boolean, default: false },
 		roomFooterRef: { type: HTMLDivElement, default: null },
 		positionTop: { type: Boolean, default: false },
-		positionRight: { type: Boolean, default: false }
+		textMessages: { type: Object, required: true }
 	},
 
 	data() {
 		return {
 			search: '',
 			emojiPickerHeight: 320,
-			emojiPickerTop: 0,
-			emojiPickerRight: ''
+			emojiPickerTop: 0
 		}
 	},
 
@@ -102,12 +104,10 @@ export default {
 				const mobileSize = innerWidth < 500 || innerHeight < 700
 
 				if (!this.roomFooterRef) {
-					if (mobileSize) this.emojiPickerRight = '0px'
 					return
 				}
 
 				if (mobileSize) {
-					this.emojiPickerRight = innerWidth / 2 - 120 + 'px'
 					this.emojiPickerTop = 100
 					this.emojiPickerHeight = innerHeight - 200
 				} else {
@@ -117,12 +117,6 @@ export default {
 
 					if (pickerTopPosition) this.emojiPickerTop = clientY + 10
 					else this.emojiPickerTop = clientY - this.emojiPickerHeight - 10
-
-					this.emojiPickerRight = this.positionTop
-						? '-50px'
-						: this.positionRight
-						? '60px'
-						: ''
 				}
 			})
 		}
@@ -139,7 +133,7 @@ export default {
 		position: absolute;
 		z-index: 9999;
 		bottom: 32px;
-		right: 10px;
+		left: 0px;
 		width: 240px;
 		overflow: scroll;
 		padding: 16px;

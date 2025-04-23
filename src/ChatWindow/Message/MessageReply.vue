@@ -1,64 +1,85 @@
 <template>
-	<div class="vac-reply-message" @click="showReplyMessage(message.replyMessage)">
-		<div class="vac-reply-username">
-			{{ replyUsername }}
-		</div>
-
-		<div v-if="isImage" class="vac-image-reply-container">
-			<div
-				class="vac-message-image vac-message-image-reply"
-				:style="{
-					'background-image': `url('${message.replyMessage.file.url}')`
-				}"
-			/>
-		</div>
-
-		<div v-else-if="isVideo" class="vac-video-reply-container">
-			<video width="100%" height="100%" controls>
-				<source :src="message.replyMessage.file.url" />
-			</video>
-		</div>
-
-		<audio-player
-			v-else-if="isAudio"
-			:src="message.replyMessage.file.url"
-			@update-progress-time="progressTime = $event"
-			@hover-audio-progress="hoverAudioProgress = $event"
+	<div
+		class="vac-reply-message"
+		@click="showReplyMessage(message.replyMessage)"
+	>
+		<div
+			class="vac-reply-message vac-reply-message-container"
+			:class="{
+				'vac-reply-message-container-me': message.senderId === currentUserId
+			}"
 		>
-			<template v-for="(i, name) in $scopedSlots" #[name]="data">
-				<slot :name="name" v-bind="data" />
-			</template>
-		</audio-player>
-
-		<div v-else-if="message.replyMessage.file" class="vac-image-reply-container">
-			<div class="vac-reply-content">
-				<div>
-					<div style="text-align: center;">
-						<svg-icon name="file" />
-					</div>
-					<div style="white-space: nowrap; overflow: hidden;">
-						<center>{{ message.replyMessage.file.name }}</center>
-					</div>
-					<div>
-						<center>{{ message.replyMessage.file.extension }}</center>
-					</div>
-					<hr v-if="message.replyMessage.content" />
-				</div>
+			<div class="vac-reply-username">
+				{{ replyUsername }}
 			</div>
-		</div>
 
-		<div class="vac-reply-content">
-			<format-message
-				:content="message.replyMessage.content"
-				:users="roomUsers"
-				:text-formatting="textFormatting"
-				:link-options="linkOptions"
-				:reply="true"
+			<div v-if="isImage" class="vac-image-reply-container">
+				<div
+					class="vac-message-image vac-message-image-reply"
+					:style="{
+						'background-image': `url('${message.replyMessage.file.url}')`
+					}"
+				/>
+			</div>
+
+			<div v-else-if="isVideo" class="vac-video-reply-container">
+				<video width="100%" height="100%" controls>
+					<source :src="message.replyMessage.file.url" />
+				</video>
+			</div>
+
+			<audio-player
+				v-else-if="isAudio"
+				:src="message.replyMessage.file.url"
+				@update-progress-time="progressTime = $event"
+				@hover-audio-progress="hoverAudioProgress = $event"
 			>
 				<template v-for="(i, name) in $scopedSlots" #[name]="data">
 					<slot :name="name" v-bind="data" />
 				</template>
-			</format-message>
+			</audio-player>
+
+			<div
+				v-else-if="message.replyMessage.file"
+				class="vac-image-reply-container"
+			>
+				<div
+					class="vac-reply-content"
+					:class="{
+						'vac-reply-content-me': message.senderId === currentUserId
+					}"
+				>
+					<div>
+						<div style="text-align: center">
+							<svg-icon name="file" />
+						</div>
+						<div style="white-space: nowrap; overflow: hidden">
+							<center>{{ message.replyMessage.file.name }}</center>
+						</div>
+						<div>
+							<center>{{ message.replyMessage.file.extension }}</center>
+						</div>
+						<hr v-if="message.replyMessage.content" />
+					</div>
+				</div>
+			</div>
+
+			<div
+				class="vac-reply-content"
+				:class="{ 'vac-reply-content-me': message.senderId === currentUserId }"
+			>
+				<format-message
+					:content="message.replyMessage.content"
+					:users="roomUsers"
+					:text-formatting="textFormatting"
+					:link-options="linkOptions"
+					:reply="true"
+				>
+					<template v-for="(i, name) in $scopedSlots" #[name]="data">
+						<slot :name="name" v-bind="data" />
+					</template>
+				</format-message>
+			</div>
 		</div>
 	</div>
 </template>
@@ -82,7 +103,8 @@ export default {
 		message: { type: Object, required: true },
 		textFormatting: { type: Boolean, required: true },
 		linkOptions: { type: Object, required: true },
-		roomUsers: { type: Array, required: true }
+		roomUsers: { type: Array, required: true },
+		currentUserId: { type: [String, Number], required: true }
 	},
 
 	computed: {
@@ -111,13 +133,20 @@ export default {
 </script>
 
 <style lang="scss">
-
 .vac-reply-message {
-	background: var(--chat-message-bg-color-reply);
+	background: white;
 	border-radius: 4px;
-	margin: -1px -5px 8px;
-	padding: 8px 10px;
 	cursor: pointer;
+
+	.vac-reply-message-container {
+		background: var(--chat-message-bg-color-reply);
+		margin: -1px -5px 8px;
+		padding: 8px 10px;
+	}
+
+	.vac-reply-message-container-me {
+		background: var(--chat-message-bg-color-reply-me);
+	}
 
 	.vac-reply-username {
 		color: var(--chat-message-color-reply-username);
@@ -148,6 +177,10 @@ export default {
 	.vac-reply-content {
 		font-size: 12px;
 		color: var(--chat-message-color-reply-content);
+	}
+
+	.vac-reply-content-me {
+		color: var(--chat-message-color-reply-content-me);
 	}
 }
 </style>

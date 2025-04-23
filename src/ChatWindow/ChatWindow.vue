@@ -5,12 +5,11 @@
 				v-if="!singleRoom"
 				:current-user-id="currentUserId"
 				:rooms="orderedRooms"
+				:room-types="roomTypes"
 				:loading-rooms="loadingRooms"
 				:rooms-loaded="roomsLoaded"
 				:room="room"
-				:room-actions="roomActions"
 				:text-messages="t"
-				:show-add-room="showAddRoom"
 				:show-rooms-list="showRoomsList"
 				:text-formatting="textFormatting"
 				:link-options="linkOptions"
@@ -29,12 +28,12 @@
 			<room
 				:current-user-id="currentUserId"
 				:rooms="rooms"
+				:height="height"
 				:room-id="room.roomId || ''"
 				:load-first-room="loadFirstRoom"
 				:messages="messages"
 				:room-message="roomMessage"
 				:messages-loaded="messagesLoaded"
-				:menu-actions="menuActions"
 				:message-actions="messageActions"
 				:show-send-icon="showSendIcon"
 				:show-files="showFiles"
@@ -55,6 +54,7 @@
 				:accepted-files="acceptedFiles"
 				:max-file-size="maxFileSize"
 				:max-files-sum-size="maxFilesSumSize"
+				:active-tab="activeTab"
 				@toggle-rooms-list="toggleRoomsList"
 				@room-info="roomInfo"
 				@fetch-messages="fetchMessages"
@@ -65,11 +65,13 @@
 				@limit-size-exceeded="limitSizeExceeded"
 				@open-user-tag="openUserTag"
 				@menu-action-handler="menuActionHandler"
+				@rename-room="renameRoomActionHandler"
 				@message-action-handler="messageActionHandler"
 				@send-message-reaction="sendMessageReaction"
 				@typing-message="typingMessage"
 				@textarea-action-handler="textareaActionHandler"
 				@show-reply-message="showReplyMessage"
+				@change-tab="changeTab"
 			>
 				<template v-for="(i, name) in $scopedSlots" #[name]="data">
 					<slot :name="name" v-bind="data" />
@@ -106,14 +108,13 @@ export default {
 		textMessages: { type: Object, default: null },
 		currentUserId: { type: [String, Number], default: '' },
 		rooms: { type: Array, default: () => [] },
+		roomTypes: { type: Array, required: true },
 		loadingRooms: { type: Boolean, default: false },
 		roomsLoaded: { type: Boolean, default: false },
 		roomId: { type: [String, Number], default: null },
 		loadFirstRoom: { type: Boolean, default: true },
 		messages: { type: Array, default: () => [] },
 		messagesLoaded: { type: Boolean, default: false },
-		roomActions: { type: Array, default: () => [] },
-		menuActions: { type: Array, default: () => [] },
 		messageActions: {
 			type: Array,
 			default: () => [
@@ -122,7 +123,6 @@ export default {
 				{ name: 'deleteMessage', title: 'Delete Message', onlyMe: true }
 			]
 		},
-		showAddRoom: { type: Boolean, default: true },
 		showSendIcon: { type: Boolean, default: true },
 		showFiles: { type: Boolean, default: true },
 		showAudio: { type: Boolean, default: true },
@@ -139,7 +139,8 @@ export default {
 		roomMessage: { type: String, default: '' },
 		acceptedFiles: { type: String, default: '*' },
 		maxFileSize: { type: Number, default: null },
-		maxFilesSumSize: { type: Number, default: null }
+		maxFilesSumSize: { type: Number, default: null },
+		activeTab: { type: String, default: 'chat' }
 	},
 
 	data() {
@@ -298,6 +299,12 @@ export default {
 				roomId: this.room.roomId
 			})
 		},
+		renameRoomActionHandler(ev) {
+			this.$emit('rename-room', {
+				name: ev,
+				roomId: this.room.roomId
+			})
+		},
 		roomActionHandler({ action, roomId }) {
 			this.$emit('room-action-handler', {
 				action,
@@ -330,6 +337,9 @@ export default {
 		},
 		showReplyMessage(message) {
 			this.$emit('show-reply-message', message)
+		},
+		changeTab(tab) {
+			this.$emit('change-tab', tab)
 		}
 	}
 }

@@ -16,8 +16,8 @@
 					<div class="vac-room-name vac-text-ellipsis">
 						{{ room.roomName }}
 					</div>
-					<div v-if="room.lastMessage" class="vac-text-date">
-						{{ room.lastMessage.timestamp }}
+					<div v-if="room.unreadCount" class="vac-badge-counter vac-room-badge">
+						{{ room.unreadCount }}
 					</div>
 				</div>
 				<div
@@ -69,42 +69,10 @@
 					>
 						{{ typingUsers }}
 					</div>
-					<div class="vac-room-options-container">
-						<div
-							v-if="room.unreadCount"
-							class="vac-badge-counter vac-room-badge"
-						>
-							{{ room.unreadCount }}
+					<div class="vac-room-last-message-timestamp">
+						<div class="vac-text-date">
+							{{ room.lastMessage && room.lastMessage.timestamp }}
 						</div>
-						<slot name="room-list-options" v-bind="{ room }">
-							<div
-								v-if="roomActions.length"
-								class="vac-svg-button vac-list-room-options"
-								@click.stop="roomMenuOpened = room.roomId"
-							>
-								<slot name="room-list-options-icon">
-									<svg-icon name="dropdown" param="room" />
-								</slot>
-							</div>
-							<transition v-if="roomActions.length" name="vac-slide-left">
-								<div
-									v-if="roomMenuOpened === room.roomId"
-									v-click-outside="closeRoomMenu"
-									class="vac-menu-options"
-								>
-									<div class="vac-menu-list">
-										<div v-for="action in roomActions" :key="action.name">
-											<div
-												class="vac-menu-item"
-												@click.stop="roomActionHandler(action)"
-											>
-												{{ action.title }}
-											</div>
-										</div>
-									</div>
-								</div>
-							</transition>
-						</slot>
 					</div>
 				</div>
 			</div>
@@ -137,14 +105,7 @@ export default {
 		room: { type: Object, required: true },
 		textFormatting: { type: Boolean, required: true },
 		linkOptions: { type: Object, required: true },
-		textMessages: { type: Object, required: true },
-		roomActions: { type: Array, required: true }
-	},
-
-	data() {
-		return {
-			roomMenuOpened: null
-		}
+		textMessages: { type: Object, required: true }
 	},
 
 	computed: {
@@ -207,16 +168,6 @@ export default {
 		isAudio() {
 			return isAudioFile(this.room.lastMessage.file)
 		}
-	},
-
-	methods: {
-		roomActionHandler(action) {
-			this.closeRoomMenu()
-			this.$emit('room-action-handler', { action, roomId: this.room.roomId })
-		},
-		closeRoomMenu() {
-			this.roomMenuOpened = null
-		}
 	}
 }
 </script>
@@ -226,8 +177,8 @@ export default {
 	display: flex;
 	flex: 1;
 	align-items: center;
-	width: 100%;
-	margin-left: 12px;
+	width: calc(100% - 24px);
+	margin: 0px 12px;
 
 	.vac-name-container {
 		flex: 1;
@@ -260,8 +211,6 @@ export default {
 
 	.vac-text-date {
 		margin-left: 5px;
-		font-size: 11px;
-		color: var(--chat-room-color-timestamp);
 	}
 
 	.vac-text-last {
@@ -269,7 +218,8 @@ export default {
 		align-items: center;
 		font-size: 12px;
 		line-height: 19px;
-		color: var(--chat-room-color-message);
+		color: var(--chat-room-color-last-message);
+		font-weight: 500;
 	}
 
 	.vac-message-new {
@@ -294,7 +244,7 @@ export default {
 		fill: var(--chat-room-color-message);
 	}
 
-	.vac-room-options-container {
+	.vac-room-last-message-timestamp {
 		display: flex;
 		margin-left: auto;
 	}
@@ -303,6 +253,7 @@ export default {
 		background-color: var(--chat-room-bg-color-badge);
 		color: var(--chat-room-color-badge);
 		margin-left: 5px;
+		font-weight: 600;
 	}
 
 	.vac-list-room-options {

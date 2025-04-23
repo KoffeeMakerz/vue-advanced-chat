@@ -12,272 +12,306 @@
 		<room-header
 			v-else
 			:current-user-id="currentUserId"
+			:active-tab="activeTab"
 			:text-messages="textMessages"
-			:single-room="singleRoom"
-			:show-rooms-list="showRoomsList"
-			:is-mobile="isMobile"
 			:room-info="roomInfo"
-			:menu-actions="menuActions"
 			:room="room"
+			:tabs="tabs"
+			@change-tab="$emit('change-tab', $event)"
 			@toggle-rooms-list="$emit('toggle-rooms-list')"
 			@room-info="$emit('room-info')"
 			@menu-action-handler="$emit('menu-action-handler', $event)"
+			@rename-room="$emit('rename-room', $event)"
 		>
 			<template v-for="(i, name) in $scopedSlots" #[name]="data">
 				<slot :name="name" v-bind="data" />
 			</template>
 		</room-header>
 
-		<div
-			ref="scrollContainer"
-			class="vac-container-scroll"
-			@scroll="onContainerScroll"
-		>
-			<loader :show="loadingMessages" />
-			<div class="vac-messages-container">
-				<div :class="{ 'vac-messages-hidden': loadingMessages }">
-					<transition name="vac-fade-message">
-						<div v-if="showNoMessages" class="vac-text-started">
-							<slot name="messages-empty">
-								{{ textMessages.MESSAGES_EMPTY }}
+		<div v-if="activeTab === tabs.FILES" class="vac-tab-chats-content">
+			<div ref="scrollContainer" class="vac-container-scroll">
+				<slot name="files-tab-content" />
+			</div>
+		</div>
+		<div v-else-if="activeTab === tabs.PINNED" class="vac-tab-chats-content">
+			<div ref="scrollContainer" class="vac-container-scroll">
+				<slot name="pinned-tab-content" />
+			</div>
+		</div>
+		<div v-else-if="activeTab === tabs.CHAT" class="vac-tab-chats-content">
+			<div
+				ref="scrollContainer"
+				class="vac-container-scroll"
+				@scroll="onContainerScroll"
+			>
+				<loader :show="loadingMessages" />
+				<div class="vac-messages-container">
+					<div :class="{ 'vac-messages-hidden': loadingMessages }">
+						<transition name="vac-fade-message">
+							<div v-if="showNoMessages" class="vac-text-started">
+								<slot name="messages-empty">
+									{{ textMessages.MESSAGES_EMPTY }}
+								</slot>
+							</div>
+							<div v-if="showMessagesStarted" class="vac-text-started">
+								{{ textMessages.CONVERSATION_STARTED }} {{ messages[0].date }}
+							</div>
+						</transition>
+						<transition name="vac-fade-message">
+							<infinite-loading
+								v-if="messages.length"
+								:class="{ 'vac-infinite-loading': !messagesLoaded }"
+								force-use-infinite-wrapper=".vac-container-scroll"
+								web-component-name="vue-advanced-chat"
+								spinner="spiral"
+								direction="top"
+								:distance="40"
+								@infinite="loadMoreMessages"
+							>
+								<div slot="spinner">
+									<loader :show="true" :infinite="true" />
+								</div>
+								<div slot="no-results" />
+								<div slot="no-more" />
+							</infinite-loading>
+						</transition>
+						<transition-group :key="roomId" name="vac-fade-message">
+							<div v-for="(m, i) in messages" :key="m._id">
+								<message
+									:current-user-id="currentUserId"
+									:message="m"
+									:index="i"
+									:messages="messages"
+									:edited-message="editedMessage"
+									:message-actions="messageActions"
+									:room-users="room.users"
+									:text-messages="textMessages"
+									:room-footer-ref="$refs.roomFooter"
+									:new-messages="newMessages"
+									:show-reaction-emojis="showReactionEmojis"
+									:show-new-messages-divider="showNewMessagesDivider"
+									:text-formatting="textFormatting"
+									:link-options="linkOptions"
+									:emojis-list="emojisList"
+									:hide-options="hideOptions"
+									:show-message-option="!room.removedRoomStatus"
+									@message-added="onMessageAdded"
+									@message-action-handler="messageActionHandler"
+									@open-file="openFile"
+									@open-user-tag="openUserTag"
+									@send-message-reaction="sendMessageReaction"
+									@hide-options="hideOptions = $event"
+									@show-reply-message="showReplyMessage"
+								>
+									<template v-for="(idx, name) in $scopedSlots" #[name]="data">
+										<slot :name="name" v-bind="data" />
+									</template>
+								</message>
+							</div>
+						</transition-group>
+					</div>
+				</div>
+			</div>
+			<div v-if="!loadingMessages">
+				<transition name="vac-bounce">
+					<div
+						v-if="scrollIcon"
+						class="vac-icon-scroll"
+						@click="scrollToBottom"
+					>
+						<transition name="vac-bounce">
+							<div
+								v-if="scrollMessagesCount"
+								class="vac-badge-counter vac-messages-count"
+							>
+								{{ scrollMessagesCount }}
+							</div>
+						</transition>
+						<slot name="scroll-icon">
+							<svg-icon name="dropdown" param="scroll" />
+						</slot>
+					</div>
+				</transition>
+			</div>
+			<div
+				v-show="!!files.length"
+				class="vac-app-box-shadow files-list"
+				style="bottom: 66px"
+			>
+				<div class="vac-files-box">
+					<file-upload
+						v-for="(item, index) in files"
+						:key="index"
+						:index="index"
+						:file="item"
+						@close-single-file="removeSingleFile"
+					/>
+				</div>
+				<div
+					class="vac-svg-button vac-close-all-files"
+					@click="closeUploadedFiles"
+				>
+					<svg-icon name="close-outline" />
+				</div>
+			</div>
+			<div
+				v-show="Object.keys(room).length && showFooter"
+				v-if="!room.removedRoomStatus"
+				ref="roomFooter"
+				class="vac-room-footer"
+			>
+				<room-message-reply
+					:room="room"
+					:message-reply="messageReply"
+					:text-formatting="textFormatting"
+					:link-options="linkOptions"
+					@reset-message="resetMessage"
+				>
+					<template v-for="(i, name) in $scopedSlots" #[name]="data">
+						<slot :name="name" v-bind="data" />
+					</template>
+				</room-message-reply>
+
+				<room-emojis
+					:filtered-emojis="filteredEmojis"
+					@select-emoji="selectEmoji($event)"
+				/>
+
+				<room-users-tag
+					:filtered-users-tag="filteredUsersTag"
+					:height="height"
+					style="
+						background-color: white !important;
+						overflow-y: auto !important;
+					"
+					@select-user-tag="selectUserTag($event)"
+				/>
+
+				<div
+					class="vac-box-footer"
+					:class="{
+						'vac-app-box-shadow':
+							filteredEmojis.length || filteredUsersTag.length
+					}"
+				>
+					<div class="vac-icon-textarea-left">
+						<div v-if="showAudio && !imageFile && !videoFile">
+							<template v-if="isRecording">
+								<div
+									class="vac-svg-button vac-icon-audio-stop"
+									@click="stopRecorder"
+								>
+									<slot name="audio-stop-icon">
+										<svg-icon name="close-outline" />
+									</slot>
+								</div>
+
+								<div class="vac-dot-audio-record" />
+
+								<div class="vac-dot-audio-record-time">
+									{{ recordedTime }}
+								</div>
+
+								<div
+									class="vac-svg-button vac-icon-audio-confirm"
+									@click="toggleRecorder(false)"
+								>
+									<slot name="audio-stop-icon">
+										<svg-icon name="checkmark" />
+									</slot>
+								</div>
+							</template>
+
+							<div v-else class="vac-svg-button" @click="toggleRecorder(true)">
+								<slot name="microphone-icon">
+									<svg-icon name="microphone" class="vac-icon-microphone" />
+								</slot>
+							</div>
+						</div>
+
+						<div
+							v-if="showFiles"
+							class="vac-svg-button"
+							@click="launchFilePicker"
+						>
+							<slot name="paperclip-icon">
+								<svg-icon name="paperclip" />
 							</slot>
 						</div>
-						<div v-if="showMessagesStarted" class="vac-text-started">
-							{{ textMessages.CONVERSATION_STARTED }} {{ messages[0].date }}
-						</div>
-					</transition>
-					<transition name="vac-fade-message">
-						<infinite-loading
-							v-if="messages.length"
-							:class="{ 'vac-infinite-loading': !messagesLoaded }"
-							force-use-infinite-wrapper=".vac-container-scroll"
-							web-component-name="vue-advanced-chat"
-							spinner="spiral"
-							direction="top"
-							:distance="40"
-							@infinite="loadMoreMessages"
+
+						<input
+							v-if="showFiles"
+							ref="file"
+							type="file"
+							multiple="multiple"
+							:accept="acceptedFiles"
+							style="display: none"
+							@change="onFileChange($event.target.files)"
+						/>
+
+						<emoji-picker
+							v-if="showEmojis && (!file || imageFile || videoFile)"
+							:emoji-opened="emojiOpened"
+							:position-top="true"
+							:text-messages="textMessages"
+							@add-emoji="addEmoji"
+							@open-emoji="emojiOpened = $event"
 						>
-							<div slot="spinner">
-								<loader :show="true" :infinite="true" />
-							</div>
-							<div slot="no-results" />
-							<div slot="no-more" />
-						</infinite-loading>
-					</transition>
-					<transition-group :key="roomId" name="vac-fade-message">
-						<div v-for="(m, i) in messages" :key="m._id">
-							<message
-								:current-user-id="currentUserId"
-								:message="m"
-								:index="i"
-								:messages="messages"
-								:edited-message="editedMessage"
-								:message-actions="messageActions"
-								:room-users="room.users"
-								:text-messages="textMessages"
-								:room-footer-ref="$refs.roomFooter"
-								:new-messages="newMessages"
-								:show-reaction-emojis="showReactionEmojis"
-								:show-new-messages-divider="showNewMessagesDivider"
-								:text-formatting="textFormatting"
-								:link-options="linkOptions"
-								:emojis-list="emojisList"
-								:hide-options="hideOptions"
-								:show-message-option="!room.removedRoomStatus"
-								@message-added="onMessageAdded"
-								@message-action-handler="messageActionHandler"
-								@open-file="openFile"
-								@open-user-tag="openUserTag"
-								@send-message-reaction="sendMessageReaction"
-								@hide-options="hideOptions = $event"
-								@show-reply-message="showReplyMessage"
-							>
-								<template v-for="(idx, name) in $scopedSlots" #[name]="data">
-									<slot :name="name" v-bind="data" />
-								</template>
-							</message>
-						</div>
-					</transition-group>
-				</div>
-			</div>
-		</div>
-		<div v-if="!loadingMessages">
-			<transition name="vac-bounce">
-				<div v-if="scrollIcon" class="vac-icon-scroll" @click="scrollToBottom">
-					<transition name="vac-bounce">
+							<template v-for="(i, name) in $scopedSlots" #[name]="data">
+								<slot :name="name" v-bind="data" />
+							</template>
+						</emoji-picker>
+					</div>
+
+					<textarea
+						v-show="!file || imageFile || videoFile"
+						ref="roomTextarea"
+						v-model="message"
+						:placeholder="textMessages.TYPE_MESSAGE"
+						class="vac-textarea"
+						:class="{
+							'vac-textarea-outline': editedMessage._id
+						}"
+						:style="{
+							'min-height': '20px',
+							'padding-left': '12px',
+							'max-height':
+								files.length || messageReply ? 'calc(40vh - 100px)' : '40vh',
+							overflow: 'auto'
+						}"
+						@input="onChangeInput"
+						@keydown.esc="escapeTextarea"
+					/>
+
+					<div class="vac-icon-textarea">
 						<div
-							v-if="scrollMessagesCount"
-							class="vac-badge-counter vac-messages-count"
+							v-if="editedMessage._id"
+							class="vac-svg-button"
+							@click="resetMessage"
 						>
-							{{ scrollMessagesCount }}
-						</div>
-					</transition>
-					<slot name="scroll-icon">
-						<svg-icon name="dropdown" param="scroll" />
-					</slot>
-				</div>
-			</transition>
-		</div>
-		<div v-show="!!files.length" class="vac-app-box-shadow files-list" style="bottom: 66px;">
-			<div class="vac-files-box">
-				<file-upload v-for="(item, index) in files" :key="index" :index="index" :file="item" @close-single-file="removeSingleFile" />
-			</div>
-			<div class="vac-svg-button vac-close-all-files" @click="closeUploadedFiles">
-				<svg-icon name="close-outline" />
-			</div>
-		</div>
-		<div
-			v-show="Object.keys(room).length && showFooter"
-			v-if="!room.removedRoomStatus"
-			ref="roomFooter"
-			class="vac-room-footer"
-		>
-			<room-message-reply
-				:room="room"
-				:message-reply="messageReply"
-				:text-formatting="textFormatting"
-				:link-options="linkOptions"
-				@reset-message="resetMessage"
-			>
-				<template v-for="(i, name) in $scopedSlots" #[name]="data">
-					<slot :name="name" v-bind="data" />
-				</template>
-			</room-message-reply>
-
-			<room-emojis
-				:filtered-emojis="filteredEmojis"
-				@select-emoji="selectEmoji($event)"
-			/>
-
-			<room-users-tag
-				:filtered-users-tag="filteredUsersTag"
-				@select-user-tag="selectUserTag($event)"
-			/>
-
-			<div
-				class="vac-box-footer"
-				:class="{
-					'vac-app-box-shadow': filteredEmojis.length || filteredUsersTag.length
-				}"
-			>
-				<div
-					v-if="showAudio && !imageFile && !videoFile"
-					class="vac-icon-textarea-left"
-				>
-					<template v-if="isRecording">
-						<div
-							class="vac-svg-button vac-icon-audio-stop"
-							@click="stopRecorder"
-						>
-							<slot name="audio-stop-icon">
+							<slot name="edit-close-icon">
 								<svg-icon name="close-outline" />
 							</slot>
 						</div>
 
-						<div class="vac-dot-audio-record" />
-
-						<div class="vac-dot-audio-record-time">
-							{{ recordedTime }}
+						<div
+							v-if="textareaAction"
+							class="vac-svg-button"
+							@click="textareaActionHandler"
+						>
+							<slot name="custom-action-icon">
+								<svg-icon name="deleted" />
+							</slot>
 						</div>
 
 						<div
-							class="vac-svg-button vac-icon-audio-confirm"
-							@click="toggleRecorder(false)"
+							v-if="showSendIcon"
+							class="vac-send-button"
+							:class="{ 'vac-send-disabled': isMessageEmpty }"
+							@click="sendMessage"
 						>
-							<slot name="audio-stop-icon">
-								<svg-icon name="checkmark" />
-							</slot>
+							Send
 						</div>
-					</template>
-
-					<div v-else class="vac-svg-button" @click="toggleRecorder(true)">
-						<slot name="microphone-icon">
-							<svg-icon name="microphone" class="vac-icon-microphone" />
-						</slot>
-					</div>
-				</div>
-
-				<textarea
-					v-show="!file || imageFile || videoFile"
-					ref="roomTextarea"
-					v-model="message"
-					:placeholder="textMessages.TYPE_MESSAGE"
-					class="vac-textarea"
-					:class="{
-						'vac-textarea-outline': editedMessage._id
-					}"
-					:style="{
-						'min-height': '20px',
-						'padding-left': '12px',
-						'max-height': files.length || messageReply ? 'calc(40vh - 100px)' : '40vh',
-						'overflow': 'auto'
-					}"
-					@input="onChangeInput"
-					@keydown.esc="escapeTextarea"
-				/>
-
-				<div class="vac-icon-textarea">
-					<div
-						v-if="editedMessage._id"
-						class="vac-svg-button"
-						@click="resetMessage"
-					>
-						<slot name="edit-close-icon">
-							<svg-icon name="close-outline" />
-						</slot>
-					</div>
-
-					<emoji-picker
-						v-if="showEmojis && (!file || imageFile || videoFile)"
-						:emoji-opened="emojiOpened"
-						:position-top="true"
-						@add-emoji="addEmoji"
-						@open-emoji="emojiOpened = $event"
-					>
-						<template v-for="(i, name) in $scopedSlots" #[name]="data">
-							<slot :name="name" v-bind="data" />
-						</template>
-					</emoji-picker>
-
-					<div
-						v-if="showFiles"
-						class="vac-svg-button"
-						@click="launchFilePicker"
-					>
-						<slot name="paperclip-icon">
-							<svg-icon name="paperclip" />
-						</slot>
-					</div>
-
-					<div
-						v-if="textareaAction"
-						class="vac-svg-button"
-						@click="textareaActionHandler"
-					>
-						<slot name="custom-action-icon">
-							<svg-icon name="deleted" />
-						</slot>
-					</div>
-
-					<input
-						v-if="showFiles"
-						ref="file"
-						type="file"
-						multiple="multiple"
-						:accept="acceptedFiles"
-						style="display:none"
-						@change="onFileChange($event.target.files)"
-					/>
-
-					<div
-						v-if="showSendIcon"
-						class="vac-svg-button"
-						:class="{ 'vac-send-disabled': isMessageEmpty }"
-						@click="sendMessage"
-					>
-						<slot name="send-icon">
-							<svg-icon name="send" :param="isMessageEmpty ? 'disabled' : ''" />
-						</slot>
 					</div>
 				</div>
 			</div>
@@ -326,6 +360,7 @@ export default {
 	},
 
 	props: {
+		height: { type: String, required: true },
 		currentUserId: { type: [String, Number], required: true },
 		textMessages: { type: Object, required: true },
 		singleRoom: { type: Boolean, required: true },
@@ -337,7 +372,6 @@ export default {
 		messages: { type: Array, required: true },
 		roomMessage: { type: String, default: null },
 		messagesLoaded: { type: Boolean, required: true },
-		menuActions: { type: Array, required: true },
 		messageActions: { type: Array, required: true },
 		showSendIcon: { type: Boolean, required: true },
 		showFiles: { type: Boolean, required: true },
@@ -353,7 +387,8 @@ export default {
 		linkOptions: { type: Object, required: true },
 		loadingRooms: { type: Boolean, required: true },
 		roomInfo: { type: Function, default: null },
-		textareaAction: { type: Function, default: null }
+		textareaAction: { type: Function, default: null },
+		activeTab: { type: String, default: 'chat' }
 	},
 
 	data() {
@@ -385,7 +420,12 @@ export default {
 			cursorRangePosition: null,
 			recorder: this.initRecorder(),
 			isRecording: false,
-			format: 'mp3'
+			format: 'mp3',
+			tabs: {
+				CHAT: 'chat',
+				FILES: 'files',
+				PINNED: 'pinned'
+			}
 		}
 	},
 
@@ -499,7 +539,6 @@ export default {
 		})
 
 		this.$refs['roomTextarea'].addEventListener('blur', () => {
-			this.resetFooterList()
 			if (isMobile) setTimeout(() => (this.keepKeyboardOpen = false))
 		})
 	},
@@ -583,10 +622,7 @@ export default {
 		updateFooterList(tagChar) {
 			if (!this.$refs['roomTextarea']) return
 
-			if (
-				tagChar === '@' &&
-				(!this.room.users || this.room.users.length <= 2)
-			) {
+			if (tagChar === '@' && (!this.room.users || this.room.users.length < 2)) {
 				return
 			}
 
@@ -691,6 +727,7 @@ export default {
 
 			this.cursorRangePosition =
 				position + user.username.length + space.length + 1
+			this.resetFooterList()
 			this.focusTextarea()
 		},
 		resetFooterList() {
@@ -916,7 +953,11 @@ export default {
 				const file = files[i]
 				const totalSize = this.selectedFilesSize + file.size
 
-				if (this.maxFilesSumSize && this.maxFileSize && (totalSize > this.maxFilesSumSize || file.size > this.maxFileSize)) {
+				if (
+					this.maxFilesSumSize &&
+					this.maxFileSize &&
+					(totalSize > this.maxFilesSumSize || file.size > this.maxFileSize)
+				) {
 					this.$emit('limit-size-exceeded')
 					this.closeUploadedFiles()
 					return
@@ -1026,6 +1067,8 @@ export default {
 	overflow: hidden;
 	display: flex;
 	flex-flow: column;
+	background-color: #ffffff;
+	padding: 15px 15px 15px 0px;
 
 	.vac-container-center {
 		height: 100%;
@@ -1049,12 +1092,19 @@ export default {
 		}
 	}
 
+	.vac-tab-chats-content {
+		all: inherit;
+		padding: unset;
+		border-bottom-left-radius: var(--chat-container-border-radius);
+		border-bottom-right-radius: var(--chat-container-border-radius);
+		border: 1px solid rgba(71, 48, 104, 0.09);
+	}
+
 	.vac-container-scroll {
 		background: var(--chat-content-bg-color);
 		flex: 1;
 		overflow-y: auto;
 		margin-right: 1px;
-		margin-top: 60px;
 		-webkit-overflow-scrolling: touch;
 
 		&.vac-scroll-smooth {
@@ -1110,14 +1160,18 @@ export default {
 		width: 100%;
 		border-bottom-right-radius: 4px;
 		z-index: 10;
+		background: var(--chat-content-bg-color);
+		padding: 10px 8px 10px;
 	}
 
 	.vac-box-footer {
 		display: flex;
 		position: relative;
 		background: var(--chat-footer-bg-color);
-		padding: 10px 8px 10px;
 		align-items: flex-end;
+		border-radius: 7px;
+		box-shadow: -2px 2px 4px rgba(68, 45, 101, 0.11),
+			2px 2px 4px rgba(68, 45, 101, 0.11);
 	}
 
 	.vac-textarea {
@@ -1168,6 +1222,25 @@ export default {
 		background-color: #fff;
 		border-radius: 0px 20px 20px 0px;
 		height: 44px;
+
+		.vac-send-button {
+			cursor: pointer;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			padding: 2px 14px;
+			border-radius: 13px;
+			border: 1px solid #6c5a86;
+			background-color: rgba(108, 90, 134, 0.06);
+			color: #6c5a86;
+			font-size: 13px;
+
+			&:hover {
+				background-color: rgba(108, 90, 134, 0.1);
+				padding: 3px 15px;
+				font-size: 13px;
+			}
+		}
 	}
 
 	.vac-icon-textarea-left {
@@ -1331,11 +1404,15 @@ export default {
 		}
 	}
 
-	.vac-send-disabled,
-	.vac-send-disabled svg {
+	.vac-send-disabled {
+		opacity: 0.5;
 		cursor: none !important;
 		pointer-events: none !important;
 		transform: none !important;
+
+		&:hover {
+			all: unset;
+		}
 	}
 
 	.vac-messages-hidden {
@@ -1343,10 +1420,6 @@ export default {
 	}
 
 	@media only screen and (max-width: 768px) {
-		.vac-container-scroll {
-			margin-top: 50px;
-		}
-
 		.vac-infinite-loading {
 			height: 58px;
 		}
@@ -1406,18 +1479,18 @@ export default {
 		}
 	}
 }
-.files-list{
+.files-list {
 	display: flex;
-    align-items: center;
-    padding: 10px 6px 0 6px;
+	align-items: center;
+	padding: 10px 6px 0 6px;
 }
-.vac-files-box{
+.vac-files-box {
 	display: flex;
-    overflow: auto;
-    width: calc(100% - 30px);
+	overflow: auto;
+	width: calc(100% - 30px);
 }
-.vac-close-all-files{
-	float:right;
-	padding-top:2px;
+.vac-close-all-files {
+	float: right;
+	padding-top: 2px;
 }
 </style>

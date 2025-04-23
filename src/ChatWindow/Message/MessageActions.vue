@@ -40,7 +40,6 @@
 					:emoji-opened="emojiOpened"
 					:emoji-reaction="true"
 					:room-footer-ref="roomFooterRef"
-					:position-right="message.senderId === currentUserId"
 					@add-emoji="sendMessageReaction"
 					@open-emoji="openEmoji"
 				>
@@ -141,9 +140,18 @@ export default {
 			)
 		},
 		filteredMessageActions() {
-			return this.message.senderId === this.currentUserId
-				? this.messageActions
-				: this.messageActions.filter(message => !message.onlyMe)
+			const options =
+				this.message.senderId === this.currentUserId
+					? this.messageActions
+					: this.messageActions.filter(message => !message.onlyMe)
+
+			return options.filter(
+				action =>
+					!action.disappearAfter ||
+					!this.message.createdAt ||
+					Math.floor(Date.now() - new Date(this.message.createdAt).getTime()) <
+						action.disappearAfter
+			)
 		}
 	},
 
@@ -181,8 +189,8 @@ export default {
 					return
 				}
 
-				const menuOptionsTop = this.$refs.menuOptions.getBoundingClientRect()
-					.height
+				const menuOptionsTop =
+					this.$refs.menuOptions.getBoundingClientRect().height
 
 				const actionIconTop = this.$refs.actionIcon.getBoundingClientRect().top
 				const roomFooterTop = this.roomFooterRef.getBoundingClientRect().top
