@@ -393,6 +393,7 @@ export default {
 
 	data() {
 		return {
+			typedMessages: {},
 			message: '',
 			editedMessage: {},
 			messageReply: null,
@@ -553,6 +554,16 @@ export default {
 			this.scrollMessagesCount = 0
 			this.resetMessage(true, null, true)
 
+			const roomId = this.room.roomId
+			this.message = this.typedMessages[roomId] || ''
+			this.typedMessage = this.message
+			delete this.typedMessages[roomId]
+
+			if (this.typedMessage) {
+				this.message = this.typedMessage
+				this.typedMessage = ''
+				this.onChangeInput()
+			}
 			if (this.roomMessage) {
 				this.message = this.roomMessage
 				setTimeout(() => this.onChangeInput())
@@ -793,6 +804,10 @@ export default {
 		},
 		sendMessage() {
 			let message = this.message.trim()
+			const roomId = this.room.roomId
+			this.message = this.typedMessages[roomId] || ''
+			this.typedMessage = this.message
+			delete this.typedMessages[roomId]
 
 			if (!this.files.length && !message) return
 
@@ -905,6 +920,8 @@ export default {
 			}, 50)
 		},
 		onChangeInput() {
+			const roomId = this.room.roomId
+			this.typedMessages[roomId] = this.message
 			this.keepKeyboardOpen = true
 			this.resizeTextarea()
 			this.$emit('typing-message', this.message)
